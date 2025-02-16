@@ -26,7 +26,4 @@ public class User {
     @Nonnull
     @Column(unique = true)
     private  String email;
-
-    @Nonnull
-    private String password;
 }

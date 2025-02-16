@@ -1,6 +1,6 @@
-package com.simplebank.bank.domain.repository;
+package com.simplebank.bank.data.repository;
 
-import com.simplebank.bank.domain.model.User;
+import com.simplebank.bank.domain.model.User.User;
 
 public interface UserRepository {
     User save(User user);
