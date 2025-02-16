@@ -22,7 +22,7 @@ public class Account {
 
     public double deposit(double amount) throws InvalidAmountException {
         if(amount <= 0) {
-            throw new InvalidAmountException("The number must be a positive value greater than zero");
+            throw new InvalidAmountException("The amount must be a positive value greater than zero");
         }
 
         return balance += amount;
