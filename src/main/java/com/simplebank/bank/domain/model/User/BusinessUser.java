@@ -1,13 +1,13 @@
 package com.simplebank.bank.domain.model.User;
 
-public class Business extends User {
+public class BusinessUser extends CommonUser {
     private String cnpj;
 
-    public Business() {
+    public BusinessUser() {
         super();
     }
 
-    public Business(long id, String name, String email, String cnpj) {
+    public BusinessUser(long id, String name, String email, String cnpj) {
         super(id, name, email);
 
         this.cnpj = cnpj;

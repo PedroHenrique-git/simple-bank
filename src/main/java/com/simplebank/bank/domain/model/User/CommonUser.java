@@ -1,13 +1,13 @@
 package com.simplebank.bank.domain.model.User;
 
-public abstract class User {
+public abstract class CommonUser {
     protected long id;
     protected String name;
     protected String email;
 
-    public User() {}
+    public CommonUser() {}
 
-    public User(long id, String name, String email) {
+    public CommonUser(long id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;

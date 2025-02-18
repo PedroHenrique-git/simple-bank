@@ -2,16 +2,27 @@ package com.simplebank.bank.domain.model.Account;
 
 import com.simplebank.bank.domain.exception.AccountWithoutBalanceException;
 import com.simplebank.bank.domain.exception.InvalidAmountException;
+import com.simplebank.bank.domain.model.User.CommonUser;
 
-public abstract class Account {
+public abstract class CommonAccount {
     protected long id;
     protected double balance;
+    protected CommonUser user;
 
-    public Account() {}
+    public CommonAccount() {}
 
-    public Account(long id, double balance) {
+    public CommonAccount(long id, double balance, CommonUser user) {
         this.id = id;
         this.balance = balance;
+        this.user = user;
+    }
+
+    public void setUser(CommonUser user) {
+        this.user = user;
+    }
+
+    public CommonUser getUser() {
+        return user;
     }
 
     public long getId() {

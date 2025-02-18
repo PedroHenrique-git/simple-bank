@@ -1,13 +1,13 @@
 package com.simplebank.bank.domain.model.User;
 
-public class Client extends User {
+public class ClientUser extends CommonUser {
     private String cpf;
 
-    public Client() {
+    public ClientUser() {
         super();
     }
 
-    public Client(long id, String name, String email, String cpf) {
+    public ClientUser(long id, String name, String email, String cpf) {
         super(id, name, email);
 
         this.cpf = cpf;
