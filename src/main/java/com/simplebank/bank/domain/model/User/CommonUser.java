@@ -4,13 +4,15 @@ public abstract class CommonUser {
     protected long id;
     protected String name;
     protected String email;
+    protected String password;
 
     public CommonUser() {}
 
-    public CommonUser(long id, String name, String email) {
+    public CommonUser(long id, String name, String email, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
+        this.password = password;
     }
 
     public void setId(long id) {
@@ -35,5 +37,13 @@ public abstract class CommonUser {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return this.password;
     }
 }

@@ -7,8 +7,8 @@ public class BusinessUser extends CommonUser {
         super();
     }
 
-    public BusinessUser(long id, String name, String email, String cnpj) {
-        super(id, name, email);
+    public BusinessUser(long id, String name, String email, String password, String cnpj) {
+        super(id, name, email, password);
 
         this.cnpj = cnpj;
     }

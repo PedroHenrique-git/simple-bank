@@ -7,8 +7,8 @@ public class ClientUser extends CommonUser {
         super();
     }
 
-    public ClientUser(long id, String name, String email, String cpf) {
-        super(id, name, email);
+    public ClientUser(long id, String name, String email, String password, String cpf) {
+        super(id, name, email, password);
 
         this.cpf = cpf;
     }
