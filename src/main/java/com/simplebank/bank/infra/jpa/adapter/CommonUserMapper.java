@@ -9,15 +9,15 @@ import com.simplebank.bank.infra.jpa.entity.ClientUserJpaEntity;
 import com.simplebank.bank.infra.jpa.entity.CommonUserJpaEntity;
 
 public class CommonUserMapper {
-    public CommonUser toModel(CommonUserJpaEntity u) {
+    public CommonUser toModel(CommonUserJpaEntity u) throws MapperException {
         return mapToConcreteModel(u);
     }
 
-    public CommonUserJpaEntity toEntity(CommonUser u) {
+    public CommonUserJpaEntity toEntity(CommonUser u) throws MapperException {
         return mapToConcreteEntity(u);
     }
 
-    private CommonUser mapToConcreteModel(CommonUserJpaEntity entity) {
+    private CommonUser mapToConcreteModel(CommonUserJpaEntity entity) throws MapperException {
         if(entity instanceof BusinessUserJpaEntity u) {
             return new BusinessUser(u.getId(), u.getName(), u.getEmail(), "", u.getCnpj());
         }
@@ -29,7 +29,7 @@ public class CommonUserMapper {
         throw new MapperException("The entity is not a user");
     }
 
-    private CommonUserJpaEntity mapToConcreteEntity(CommonUser model) {
+    private CommonUserJpaEntity mapToConcreteEntity(CommonUser model) throws MapperException {
         if(model instanceof BusinessUser u) {
             return BusinessUserJpaEntity
                     .builder()
