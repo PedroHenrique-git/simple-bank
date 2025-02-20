@@ -10,7 +10,7 @@ public class BusinessAccount extends CommonAccount {
         super();
     }
 
-    public BusinessAccount(long id, double balance, CommonUser user, List<Transaction> transactions) {
-        super(id, balance, user, transactions);
+    public BusinessAccount(long id, double balance, CommonUser user, List<Transaction> payerTransactions, List<Transaction> payeeTransactions) {
+        super(id, balance, user, payerTransactions, payeeTransactions);
     }
 }

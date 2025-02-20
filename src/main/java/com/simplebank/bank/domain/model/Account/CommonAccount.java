@@ -11,15 +11,17 @@ public abstract class CommonAccount {
     protected long id;
     protected double balance;
     protected CommonUser user;
-    protected List<Transaction> transactions;
+    protected List<Transaction> payerTransactions;
+    protected List<Transaction> payeeTransactions;
 
     public CommonAccount() {}
 
-    public CommonAccount(long id, double balance, CommonUser user, List<Transaction> transactions) {
+    public CommonAccount(long id, double balance, CommonUser user, List<Transaction> payerTransactions, List<Transaction> payeeTransactions) {
         this.id = id;
         this.balance = balance;
         this.user = user;
-        this.transactions = transactions;
+        this.payerTransactions = payerTransactions;
+        this.payeeTransactions = payeeTransactions;
     }
 
     public void setUser(CommonUser user) {
@@ -30,12 +32,20 @@ public abstract class CommonAccount {
         return user;
     }
 
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
+    public void setPayerTransactions(List<Transaction> payerTransactions) {
+        this.payerTransactions = payerTransactions;
     }
 
-    public List<Transaction> getTransactions() {
-        return this.transactions;
+    public List<Transaction> getPayerTransactions() {
+        return this.payerTransactions;
+    }
+
+    public void setPayeeTransactions(List<Transaction> payeeTransactions) {
+        this.payeeTransactions = payeeTransactions;
+    }
+
+    public List<Transaction> getPayeeTransactions() {
+        return this.payeeTransactions;
     }
 
     public long getId() {

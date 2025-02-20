@@ -12,8 +12,8 @@ public class ClientAccount extends CommonAccount {
         super();
     }
 
-    public ClientAccount(long id, double balance, CommonUser user, List<Transaction> transactions) {
-        super(id, balance, user, transactions);
+    public ClientAccount(long id, double balance, CommonUser user, List<Transaction> payerTransactions, List<Transaction> payeeTransactions) {
+        super(id, balance, user, payerTransactions, payeeTransactions);
     }
 
     public double transfer(double amount, CommonAccount payee) throws AccountWithoutBalanceException, InvalidAmountException {

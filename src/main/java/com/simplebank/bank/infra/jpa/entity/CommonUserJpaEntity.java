@@ -19,6 +19,7 @@ public abstract class CommonUserJpaEntity {
     private String name;
 
     @Nonnull
+    @Column(unique = true)
     private String email;
 
     @Nonnull

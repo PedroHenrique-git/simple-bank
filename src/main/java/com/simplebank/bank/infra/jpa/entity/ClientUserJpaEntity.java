@@ -1,6 +1,7 @@
 package com.simplebank.bank.infra.jpa.entity;
 
 import jakarta.annotation.Nonnull;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -12,5 +13,6 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "client_user")
 public class ClientUserJpaEntity extends CommonUserJpaEntity {
     @Nonnull
+    @Column(unique = true)
     private String cpf;
 }

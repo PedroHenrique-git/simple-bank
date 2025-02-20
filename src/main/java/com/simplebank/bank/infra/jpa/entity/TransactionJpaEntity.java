@@ -19,7 +19,7 @@ public class TransactionJpaEntity {
     private Long id;
 
     @Nonnull
-    private Long value;
+    private Double value;
 
     @Nonnull
     @ManyToOne
