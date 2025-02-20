@@ -16,7 +16,7 @@ public class TransactionConfig {
     }
 
     @Bean
-    public TransactionEntityMapper transactionJpaEntityMapper() {
+    public TransactionEntityMapper transactionEntityMapper() {
         return new TransactionEntityMapper();
     }
 }

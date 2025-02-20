@@ -10,12 +10,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class UserConfig {
     @Bean
-    public UserRepositoryGateway commonUserRepositoryGateway(UserRepository repository, UserEntityMapper mapper) {
+    public UserRepositoryGateway userRepositoryGateway(UserRepository repository, UserEntityMapper mapper) {
         return new UserRepositoryJpaGateway(repository, mapper);
     }
 
     @Bean
-    public UserEntityMapper commonUserJpaEntityMapper() {
+    public UserEntityMapper userEntityMapper() {
         return new UserEntityMapper();
     }
 }

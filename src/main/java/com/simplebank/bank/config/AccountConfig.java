@@ -12,12 +12,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AccountConfig {
     @Bean
-    public AccountRepositoryGateway commonAccountRepositoryGateway(AccountRepository repository, AccountEntityMapper mapper, TransactionEntityMapper transactionMapper) {
+    public AccountRepositoryGateway accountRepositoryGateway(AccountRepository repository, AccountEntityMapper mapper, TransactionEntityMapper transactionMapper) {
         return new AccountRepositoryJpaGateway(repository, mapper, transactionMapper);
     }
 
     @Bean
-    public AccountEntityMapper commonAccountJpaEntityMapper(UserEntityMapper userMapper) {
+    public AccountEntityMapper accountEntityMapper(UserEntityMapper userMapper) {
         return new AccountEntityMapper(userMapper);
     }
 }
