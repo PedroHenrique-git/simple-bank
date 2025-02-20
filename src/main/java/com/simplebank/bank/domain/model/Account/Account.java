@@ -3,20 +3,20 @@ package com.simplebank.bank.domain.model.Account;
 import com.simplebank.bank.domain.exception.AccountWithoutBalanceException;
 import com.simplebank.bank.domain.exception.InvalidAmountException;
 import com.simplebank.bank.domain.model.Transaction.Transaction;
-import com.simplebank.bank.domain.model.User.CommonUser;
+import com.simplebank.bank.domain.model.User.User;
 
 import java.util.List;
 
-public abstract class CommonAccount {
+public abstract class Account {
     protected long id;
     protected double balance;
-    protected CommonUser user;
+    protected User user;
     protected List<Transaction> payerTransactions;
     protected List<Transaction> payeeTransactions;
 
-    public CommonAccount() {}
+    public Account() {}
 
-    public CommonAccount(long id, double balance, CommonUser user, List<Transaction> payerTransactions, List<Transaction> payeeTransactions) {
+    public Account(long id, double balance, User user, List<Transaction> payerTransactions, List<Transaction> payeeTransactions) {
         this.id = id;
         this.balance = balance;
         this.user = user;
@@ -24,11 +24,11 @@ public abstract class CommonAccount {
         this.payeeTransactions = payeeTransactions;
     }
 
-    public void setUser(CommonUser user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
-    public CommonUser getUser() {
+    public User getUser() {
         return user;
     }
 

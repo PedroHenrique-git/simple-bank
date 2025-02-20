@@ -1,32 +1,31 @@
-package com.simplebank.bank.infra.jpa.adapter;
+package com.simplebank.bank.infra.jpa.mapper;
 
 import com.simplebank.bank.domain.model.Account.BusinessAccount;
 import com.simplebank.bank.domain.model.Account.ClientAccount;
-import com.simplebank.bank.domain.model.Account.CommonAccount;
+import com.simplebank.bank.domain.model.Account.Account;
 import com.simplebank.bank.infra.jpa.entity.*;
+import lombok.Setter;
 
-public class CommonAccountJpaEntityMapper {
-    private final CommonUserJpaEntityMapper userMapper;
-    private TransactionJpaEntityMapper transactionMapper;
+public class AccountEntityMapper {
+    private final UserEntityMapper userMapper;
 
-    public CommonAccountJpaEntityMapper(CommonUserJpaEntityMapper userMapper) {
+    @Setter
+    private TransactionEntityMapper transactionMapper;
+
+    public AccountEntityMapper(UserEntityMapper userMapper) {
         this.userMapper = userMapper;
     }
 
-    public void setTransactionMapper(TransactionJpaEntityMapper transactionMapper) {
-        this.transactionMapper = transactionMapper;
-    }
-
-    public CommonAccount toModel(CommonAccountJpaEntity a) {
+    public Account toModel(AccountEntity a) {
         return mapToConcreteModel(a);
     }
 
-    public CommonAccountJpaEntity toEntity(CommonAccount a) {
+    public AccountEntity toEntity(Account a) {
         return mapToConcreteEntity(a);
     }
 
-    private CommonAccount mapToConcreteModel(CommonAccountJpaEntity entity) {
-        if(entity instanceof BusinessAccountJpaEntity a) {
+    private Account mapToConcreteModel(AccountEntity entity) {
+        if(entity instanceof BusinessAccountEntity a) {
             return new BusinessAccount(
                         a.getId(),
                         a.getBalance(),
@@ -36,7 +35,7 @@ public class CommonAccountJpaEntityMapper {
             );
         }
 
-        if(entity instanceof ClientAccountJpaEntity a) {
+        if(entity instanceof ClientAccountEntity a) {
             return new ClientAccount(
                     a.getId(),
                     a.getBalance(),
@@ -49,9 +48,9 @@ public class CommonAccountJpaEntityMapper {
         return null;
     }
 
-    private CommonAccountJpaEntity mapToConcreteEntity(CommonAccount model) {
+    private AccountEntity mapToConcreteEntity(Account model) {
         if(model instanceof BusinessAccount a) {
-            return BusinessAccountJpaEntity
+            return BusinessAccountEntity
                     .builder()
                     .id(a.getId())
                     .balance(a.getBalance())
@@ -62,7 +61,7 @@ public class CommonAccountJpaEntityMapper {
         }
 
         if(model instanceof ClientAccount a) {
-            return ClientAccountJpaEntity
+            return ClientAccountEntity
                     .builder()
                     .id(a.getId())
                     .balance(a.getBalance())

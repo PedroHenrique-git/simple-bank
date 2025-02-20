@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "common_account")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class CommonAccountJpaEntity {
+public abstract class AccountEntity {
     @Id
     @GeneratedValue
     private Long id;
@@ -24,11 +24,11 @@ public abstract class CommonAccountJpaEntity {
     @Nonnull
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private CommonUserJpaEntity user;
+    private UserEntity user;
 
     @OneToMany(mappedBy = "payer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<TransactionJpaEntity> payerTransactions = new ArrayList<>();
+    private List<TransactionEntity> payerTransactions = new ArrayList<>();
 
     @OneToMany(mappedBy = "payee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<TransactionJpaEntity> payeeTransactions = new ArrayList<>();
+    private List<TransactionEntity> payeeTransactions = new ArrayList<>();
 }

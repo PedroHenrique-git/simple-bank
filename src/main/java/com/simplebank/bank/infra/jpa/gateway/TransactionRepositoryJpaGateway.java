@@ -2,15 +2,15 @@ package com.simplebank.bank.infra.jpa.gateway;
 
 import com.simplebank.bank.data.gateway.TransactionRepositoryGateway;
 import com.simplebank.bank.domain.model.Transaction.Transaction;
-import com.simplebank.bank.infra.jpa.adapter.CommonAccountJpaEntityMapper;
-import com.simplebank.bank.infra.jpa.adapter.TransactionJpaEntityMapper;
-import com.simplebank.bank.infra.jpa.repository.TransactionRepositoryJpa;
+import com.simplebank.bank.infra.jpa.mapper.AccountEntityMapper;
+import com.simplebank.bank.infra.jpa.mapper.TransactionEntityMapper;
+import com.simplebank.bank.infra.jpa.repository.TransactionRepository;
 
 public class TransactionRepositoryJpaGateway implements TransactionRepositoryGateway {
-    private final TransactionRepositoryJpa repository;
-    private final TransactionJpaEntityMapper mapper;
+    private final TransactionRepository repository;
+    private final TransactionEntityMapper mapper;
 
-    public TransactionRepositoryJpaGateway(TransactionRepositoryJpa repository, TransactionJpaEntityMapper mapper, CommonAccountJpaEntityMapper accountMapper) {
+    public TransactionRepositoryJpaGateway(TransactionRepository repository, TransactionEntityMapper mapper, AccountEntityMapper accountMapper) {
         this.repository = repository;
         this.mapper = mapper;
 

@@ -9,4 +9,4 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Entity
 @Table(name = "business_account")
-public class BusinessAccountJpaEntity extends CommonAccountJpaEntity { }
+public class BusinessAccountEntity extends AccountEntity { }

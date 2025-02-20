@@ -1,21 +1,21 @@
 package com.simplebank.bank.infra.jpa.gateway;
 
-import com.simplebank.bank.data.gateway.CommonUserRepositoryGateway;
-import com.simplebank.bank.domain.model.User.CommonUser;
-import com.simplebank.bank.infra.jpa.adapter.CommonUserJpaEntityMapper;
-import com.simplebank.bank.infra.jpa.repository.CommonUserRepositoryJpa;
+import com.simplebank.bank.data.gateway.UserRepositoryGateway;
+import com.simplebank.bank.domain.model.User.User;
+import com.simplebank.bank.infra.jpa.mapper.UserEntityMapper;
+import com.simplebank.bank.infra.jpa.repository.UserRepository;
 
-public class CommonUserRepositoryJpaGateway implements CommonUserRepositoryGateway {
-    private final CommonUserRepositoryJpa repository;
-    private final CommonUserJpaEntityMapper mapper;
+public class UserRepositoryJpaGateway implements UserRepositoryGateway {
+    private final UserRepository repository;
+    private final UserEntityMapper mapper;
 
-    public CommonUserRepositoryJpaGateway(CommonUserRepositoryJpa repository, CommonUserJpaEntityMapper mapper) {
+    public UserRepositoryJpaGateway(UserRepository repository, UserEntityMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }
 
     @Override
-    public CommonUser save(CommonUser user) {
+    public User save(User user) {
         var entity = mapper.toEntity(user);
         var createdUser = repository.save(entity);
 
@@ -23,7 +23,7 @@ public class CommonUserRepositoryJpaGateway implements CommonUserRepositoryGatew
     }
 
     @Override
-    public CommonUser update(long id, CommonUser newUser) {
+    public User update(long id, User newUser) {
         var user = find(id);
 
         if(user == null) {
@@ -41,7 +41,7 @@ public class CommonUserRepositoryJpaGateway implements CommonUserRepositoryGatew
     }
 
     @Override
-    public CommonUser find(long id) {
+    public User find(long id) {
         var entity = repository.findById(id);
 
         return entity.map(mapper::toModel).orElse(null);

@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Entity
 @Table(name = "client_user")
-public class ClientUserJpaEntity extends CommonUserJpaEntity {
+public class ClientUserEntity extends UserEntity {
     @Nonnull
     @Column(unique = true)
     private String cpf;

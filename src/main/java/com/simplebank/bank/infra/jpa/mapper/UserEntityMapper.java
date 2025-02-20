@@ -1,36 +1,36 @@
-package com.simplebank.bank.infra.jpa.adapter;
+package com.simplebank.bank.infra.jpa.mapper;
 
 import com.simplebank.bank.domain.model.User.BusinessUser;
 import com.simplebank.bank.domain.model.User.ClientUser;
-import com.simplebank.bank.domain.model.User.CommonUser;
-import com.simplebank.bank.infra.jpa.entity.BusinessUserJpaEntity;
-import com.simplebank.bank.infra.jpa.entity.ClientUserJpaEntity;
-import com.simplebank.bank.infra.jpa.entity.CommonUserJpaEntity;
+import com.simplebank.bank.domain.model.User.User;
+import com.simplebank.bank.infra.jpa.entity.BusinessUserEntity;
+import com.simplebank.bank.infra.jpa.entity.ClientUserEntity;
+import com.simplebank.bank.infra.jpa.entity.UserEntity;
 
-public class CommonUserJpaEntityMapper {
-    public CommonUser toModel(CommonUserJpaEntity u) {
+public class UserEntityMapper {
+    public User toModel(UserEntity u) {
         return mapToConcreteModel(u);
     }
 
-    public CommonUserJpaEntity toEntity(CommonUser u) {
+    public UserEntity toEntity(User u) {
         return mapToConcreteEntity(u);
     }
 
-    private CommonUser mapToConcreteModel(CommonUserJpaEntity entity) {
-        if(entity instanceof BusinessUserJpaEntity u) {
+    private User mapToConcreteModel(UserEntity entity) {
+        if(entity instanceof BusinessUserEntity u) {
             return new BusinessUser(u.getId(), u.getName(), u.getEmail(), "", u.getCnpj());
         }
 
-        if(entity instanceof ClientUserJpaEntity u) {
+        if(entity instanceof ClientUserEntity u) {
             return new ClientUser(u.getId(), u.getName(), u.getEmail(), "", u.getCpf());
         }
 
         return null;
     }
 
-    private CommonUserJpaEntity mapToConcreteEntity(CommonUser model) {
+    private UserEntity mapToConcreteEntity(User model) {
         if(model instanceof BusinessUser u) {
-            return BusinessUserJpaEntity
+            return BusinessUserEntity
                     .builder()
                     .id(u.getId())
                     .name(u.getName())
@@ -40,7 +40,7 @@ public class CommonUserJpaEntityMapper {
         }
 
         if(model instanceof ClientUser u) {
-            return ClientUserJpaEntity
+            return ClientUserEntity
                     .builder()
                     .id(u.getId())
                     .name(u.getName())

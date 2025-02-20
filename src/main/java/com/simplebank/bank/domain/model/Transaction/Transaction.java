@@ -1,16 +1,16 @@
 package com.simplebank.bank.domain.model.Transaction;
 
-import com.simplebank.bank.domain.model.Account.CommonAccount;
+import com.simplebank.bank.domain.model.Account.Account;
 
 public class Transaction {
     private long id;
-    private CommonAccount payer;
-    private CommonAccount payee;
+    private Account payer;
+    private Account payee;
     private double value;
 
     public Transaction() {}
 
-    public Transaction(long id, CommonAccount payer, CommonAccount payee, double value) {
+    public Transaction(long id, Account payer, Account payee, double value) {
         this.id = id;
         this.payer = payer;
         this.payee = payee;
@@ -25,19 +25,19 @@ public class Transaction {
         this.id = id;
     }
 
-    public void setPayer(CommonAccount payer) {
+    public void setPayer(Account payer) {
         this.payer = payer;
     }
 
-    public CommonAccount getPayer() {
+    public Account getPayer() {
         return payer;
     }
 
-    public void setPayee(CommonAccount payee) {
+    public void setPayee(Account payee) {
         this.payee = payee;
     }
 
-    public CommonAccount getPayee() {
+    public Account getPayee() {
         return payee;
     }
 

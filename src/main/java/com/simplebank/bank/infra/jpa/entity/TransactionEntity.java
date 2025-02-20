@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "transaction")
-public class TransactionJpaEntity {
+public class TransactionEntity {
     @Id
     @GeneratedValue
     private Long id;
@@ -24,10 +24,10 @@ public class TransactionJpaEntity {
     @Nonnull
     @ManyToOne
     @JoinColumn(name = "payer_id")
-    private CommonAccountJpaEntity payer;
+    private AccountEntity payer;
 
     @Nonnull
     @ManyToOne
     @JoinColumn(name = "payee_id")
-    private CommonAccountJpaEntity payee;
+    private AccountEntity payee;
 }

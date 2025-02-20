@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "common_user")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class CommonUserJpaEntity {
+public abstract class UserEntity {
     @Id
     @GeneratedValue
     private Long id;
@@ -26,5 +26,5 @@ public abstract class CommonUserJpaEntity {
     private String password;
 
     @OneToOne(mappedBy = "user")
-    private CommonAccountJpaEntity account;
+    private AccountEntity account;
 }
