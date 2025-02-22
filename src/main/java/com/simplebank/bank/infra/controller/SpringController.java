@@ -33,7 +33,7 @@ public class SpringController
 
     body.put("message", response.message());
     body.put("success", response.success());
-    body.put("data", mapper.valueToTree(response.body()));
+    body.set("data", mapper.valueToTree(response.body()));
 
     return ResponseEntity.status(response.status()).body(body);
   }
