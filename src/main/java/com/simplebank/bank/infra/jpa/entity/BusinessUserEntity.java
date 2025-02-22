@@ -15,4 +15,8 @@ public class BusinessUserEntity extends UserEntity {
     @Nonnull
     @Column(unique = true)
     private String cnpj;
+
+    public BusinessUserEntity() {
+        super();
+    }
 }

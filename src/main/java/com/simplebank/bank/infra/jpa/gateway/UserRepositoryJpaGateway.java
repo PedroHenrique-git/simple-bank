@@ -17,6 +17,8 @@ public class UserRepositoryJpaGateway implements UserRepositoryGateway {
     @Override
     public User save(User user) {
         var entity = mapper.toEntity(user);
+        System.out.println(entity.toString());
+
         var createdUser = repository.save(entity);
 
         return mapper.toModel(createdUser);

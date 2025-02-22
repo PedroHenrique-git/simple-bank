@@ -32,9 +32,9 @@ public class UserEntityMapper {
         if(model instanceof BusinessUser u) {
             return BusinessUserEntity
                     .builder()
-                    .id(u.getId())
                     .name(u.getName())
                     .email(u.getEmail())
+                    .password(u.getPassword())
                     .cnpj(u.getCnpj())
                     .build();
         }
@@ -42,9 +42,9 @@ public class UserEntityMapper {
         if(model instanceof ClientUser u) {
             return ClientUserEntity
                     .builder()
-                    .id(u.getId())
                     .name(u.getName())
                     .email(u.getEmail())
+                    .password(u.getPassword())
                     .cpf(u.getCpf())
                     .build();
         }

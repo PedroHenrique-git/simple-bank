@@ -27,4 +27,6 @@ public abstract class UserEntity {
 
     @OneToOne(mappedBy = "user")
     private AccountEntity account;
+
+    public UserEntity() {}
 }

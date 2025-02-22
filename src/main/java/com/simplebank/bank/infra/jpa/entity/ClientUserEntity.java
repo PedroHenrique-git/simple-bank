@@ -15,4 +15,8 @@ public class ClientUserEntity extends UserEntity {
     @Nonnull
     @Column(unique = true)
     private String cpf;
+
+    public ClientUserEntity() {
+        super();
+    }
 }

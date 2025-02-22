@@ -31,4 +31,6 @@ public abstract class AccountEntity {
 
     @OneToMany(mappedBy = "payee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<TransactionEntity> payeeTransactions = new ArrayList<>();
+
+    public AccountEntity() {}
 }

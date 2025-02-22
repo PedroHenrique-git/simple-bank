@@ -1,6 +1,9 @@
 package com.simplebank.bank.config;
 
+import com.simplebank.bank.usecase.CreateAccount;
+import com.simplebank.bank.usecase.UseCase;
 import com.simplebank.bank.data.gateway.AccountRepositoryGateway;
+import com.simplebank.bank.domain.model.Account.Account;
 import com.simplebank.bank.infra.jpa.mapper.AccountEntityMapper;
 import com.simplebank.bank.infra.jpa.mapper.UserEntityMapper;
 import com.simplebank.bank.infra.jpa.mapper.TransactionEntityMapper;
@@ -19,5 +22,10 @@ public class AccountConfig {
     @Bean
     public AccountEntityMapper accountEntityMapper(UserEntityMapper userMapper) {
         return new AccountEntityMapper(userMapper);
+    }
+
+    @Bean
+    public UseCase<Account, Account> createAccount(AccountRepositoryGateway accountRepository) {
+        return new CreateAccount(accountRepository);
     }
 }
