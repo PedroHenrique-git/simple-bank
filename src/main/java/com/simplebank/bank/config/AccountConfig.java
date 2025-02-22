@@ -1,31 +1,37 @@
 package com.simplebank.bank.config;
 
-import com.simplebank.bank.usecase.CreateAccount;
-import com.simplebank.bank.usecase.UseCase;
 import com.simplebank.bank.data.gateway.AccountRepositoryGateway;
 import com.simplebank.bank.domain.model.Account.Account;
-import com.simplebank.bank.infra.jpa.mapper.AccountEntityMapper;
-import com.simplebank.bank.infra.jpa.mapper.UserEntityMapper;
-import com.simplebank.bank.infra.jpa.mapper.TransactionEntityMapper;
 import com.simplebank.bank.infra.jpa.gateway.AccountRepositoryJpaGateway;
+import com.simplebank.bank.infra.jpa.mapper.AccountEntityMapper;
+import com.simplebank.bank.infra.jpa.mapper.TransactionEntityMapper;
+import com.simplebank.bank.infra.jpa.mapper.UserEntityMapper;
 import com.simplebank.bank.infra.jpa.repository.AccountRepository;
+import com.simplebank.bank.usecase.CreateAccount;
+import com.simplebank.bank.usecase.UseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class AccountConfig {
-    @Bean
-    public AccountRepositoryGateway accountRepositoryGateway(AccountRepository repository, AccountEntityMapper mapper, TransactionEntityMapper transactionMapper) {
-        return new AccountRepositoryJpaGateway(repository, mapper, transactionMapper);
-    }
+public class AccountConfig
+{
+  @Bean
+  public AccountRepositoryGateway accountRepositoryGateway(AccountRepository repository,
+                                                           AccountEntityMapper mapper,
+                                                           TransactionEntityMapper transactionMapper)
+  {
+    return new AccountRepositoryJpaGateway(repository, mapper, transactionMapper);
+  }
 
-    @Bean
-    public AccountEntityMapper accountEntityMapper(UserEntityMapper userMapper) {
-        return new AccountEntityMapper(userMapper);
-    }
+  @Bean
+  public AccountEntityMapper accountEntityMapper(UserEntityMapper userMapper)
+  {
+    return new AccountEntityMapper(userMapper);
+  }
 
-    @Bean
-    public UseCase<Account, Account> createAccount(AccountRepositoryGateway accountRepository) {
-        return new CreateAccount(accountRepository);
-    }
+  @Bean
+  public UseCase<Account, Account> createAccount(AccountRepositoryGateway accountRepository)
+  {
+    return new CreateAccount(accountRepository);
+  }
 }

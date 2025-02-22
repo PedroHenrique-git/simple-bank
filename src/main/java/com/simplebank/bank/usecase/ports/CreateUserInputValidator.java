@@ -2,6 +2,7 @@ package com.simplebank.bank.usecase.ports;
 
 import java.util.List;
 
-public interface CreateUserInputValidator {
-    List<String> validate(UserDTORequest dto);
+public interface CreateUserInputValidator
+{
+  List<String> validate(UserDTORequest dto);
 }

@@ -7,17 +7,21 @@ import com.simplebank.bank.usecase.UseCase;
 import com.simplebank.bank.usecase.ports.UserDTORequest;
 import com.simplebank.bank.usecase.ports.UserDTOResponse;
 
-public class CreateUserOperation implements ControllerOperation<UserDTOResponse, UserDTORequest> {
-    private final UseCase<UserDTORequest, UserDTOResponse> useCase;
+public class CreateUserOperation implements ControllerOperation<UserDTOResponse, UserDTORequest>
+{
+  private final UseCase<UserDTORequest, UserDTOResponse> useCase;
 
-    public CreateUserOperation(UseCase<UserDTORequest, UserDTOResponse> useCase) {
-        this.useCase = useCase;
-    }
+  public CreateUserOperation(UseCase<UserDTORequest, UserDTOResponse> useCase)
+  {
+    this.useCase = useCase;
+  }
 
-    @Override
-    public HttpResponse<UserDTOResponse> execute(HttpRequest<UserDTORequest> request) throws ValidationErrorException {
-        var user = useCase.execute(request.body());
+  @Override
+  public HttpResponse<UserDTOResponse> execute(HttpRequest<UserDTORequest> request)
+      throws ValidationErrorException
+  {
+    var user = useCase.execute(request.body());
 
-        return new HttpResponse<>(201, true, "user successfully registered", user);
-    }
+    return new HttpResponse<>(201, true, "user successfully registered", user);
+  }
 }

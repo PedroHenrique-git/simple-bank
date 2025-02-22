@@ -1,4 +1,5 @@
 package com.simplebank.bank.usecase.ports;
 
-public record UserDTORequest(String name, String email, String password, String document) {
+public record UserDTORequest(String name, String email, String password, String document)
+{
 }

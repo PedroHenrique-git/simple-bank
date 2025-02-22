@@ -6,22 +6,27 @@ import com.simplebank.bank.infra.jpa.mapper.AccountEntityMapper;
 import com.simplebank.bank.infra.jpa.mapper.TransactionEntityMapper;
 import com.simplebank.bank.infra.jpa.repository.TransactionRepository;
 
-public class TransactionRepositoryJpaGateway implements TransactionRepositoryGateway {
-    private final TransactionRepository repository;
-    private final TransactionEntityMapper mapper;
+public class TransactionRepositoryJpaGateway implements TransactionRepositoryGateway
+{
+  private final TransactionRepository repository;
+  private final TransactionEntityMapper mapper;
 
-    public TransactionRepositoryJpaGateway(TransactionRepository repository, TransactionEntityMapper mapper, AccountEntityMapper accountMapper) {
-        this.repository = repository;
-        this.mapper = mapper;
+  public TransactionRepositoryJpaGateway(TransactionRepository repository,
+                                         TransactionEntityMapper mapper,
+                                         AccountEntityMapper accountMapper)
+  {
+    this.repository = repository;
+    this.mapper = mapper;
 
-        this.mapper.setAccountMapper(accountMapper);
-    }
+    this.mapper.setAccountMapper(accountMapper);
+  }
 
-    @Override
-    public Transaction save(Transaction transaction) {
-        var entity = mapper.toEntity(transaction);
-        var createdTransaction = repository.save(entity);
+  @Override
+  public Transaction save(Transaction transaction)
+  {
+    var entity = mapper.toEntity(transaction);
+    var createdTransaction = repository.save(entity);
 
-        return mapper.toModel(createdTransaction);
-    }
+    return mapper.toModel(createdTransaction);
+  }
 }

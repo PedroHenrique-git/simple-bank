@@ -9,8 +9,10 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Entity
 @Table(name = "business_account")
-public class BusinessAccountEntity extends AccountEntity {
-    public BusinessAccountEntity() {
-        super();
-    }
+public class BusinessAccountEntity extends AccountEntity
+{
+  public BusinessAccountEntity()
+  {
+    super();
+  }
 }

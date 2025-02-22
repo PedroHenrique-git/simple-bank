@@ -11,12 +11,14 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Entity
 @Table(name = "client_user")
-public class ClientUserEntity extends UserEntity {
-    @Nonnull
-    @Column(unique = true)
-    private String cpf;
+public class ClientUserEntity extends UserEntity
+{
+  @Nonnull
+  @Column(unique = true)
+  private String cpf;
 
-    public ClientUserEntity() {
-        super();
-    }
+  public ClientUserEntity()
+  {
+    super();
+  }
 }
