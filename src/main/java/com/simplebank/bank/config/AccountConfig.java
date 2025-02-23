@@ -10,16 +10,21 @@ import com.simplebank.bank.infra.jpa.mappers.TransactionEntityMapper;
 import com.simplebank.bank.infra.jpa.mappers.UserEntityMapper;
 import com.simplebank.bank.infra.jpa.repositories.AccountRepository;
 import com.simplebank.bank.infra.validators.JakartaAccountValidation;
+import com.simplebank.bank.infra.validators.JakartaDepositValidation;
 import com.simplebank.bank.presentation.controllers.ControllerOperation;
 import com.simplebank.bank.presentation.controllers.CreateAccountOperation;
+import com.simplebank.bank.presentation.controllers.DepositOperation;
 import com.simplebank.bank.presentation.controllers.WebController;
 import com.simplebank.bank.usecases.CreateAccount;
+import com.simplebank.bank.usecases.Deposit;
 import com.simplebank.bank.usecases.UseCase;
-import com.simplebank.bank.usecases.mapper.AccountDTOMapper;
-import com.simplebank.bank.usecases.ports.AccountDTORequest;
-import com.simplebank.bank.usecases.ports.AccountDTOResponse;
-import com.simplebank.bank.usecases.ports.CreateAccountInputValidator;
+import com.simplebank.bank.usecases.mapper.CreateAccountDTOMapper;
+import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
+import com.simplebank.bank.usecases.ports.CreateAccountDTOResponse;
+import com.simplebank.bank.usecases.ports.DepositDTORequest;
+import com.simplebank.bank.usecases.ports.DepositDTOResponse;
 import com.simplebank.bank.usecases.ports.Encoder;
+import com.simplebank.bank.usecases.ports.InputValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -55,11 +60,11 @@ public class AccountConfig
   }
 
   @Bean
-  public UseCase<AccountDTORequest, AccountDTOResponse> createAccount(
+  public UseCase<CreateAccountDTORequest, CreateAccountDTOResponse> createAccount(
 
       AccountRepositoryGateway accountRepository,
-      CreateAccountInputValidator validator,
-      AccountDTOMapper mapper, Encoder encoder)
+      InputValidator<CreateAccountDTORequest> validator,
+      CreateAccountDTOMapper mapper, Encoder encoder)
   {
     return new CreateAccount(accountRepository, validator,
         mapper,
@@ -67,29 +72,56 @@ public class AccountConfig
   }
 
   @Bean
-  public CreateAccountInputValidator createAccountInputValidator()
+  public InputValidator<CreateAccountDTORequest> createAccountInputValidator()
   {
     return new JakartaAccountValidation();
   }
 
   @Bean
-  public AccountDTOMapper accountDTOMapper(AccountFactoryMaker factory,
-                                           UserFactoryMaker userFactoryMaker)
+  public CreateAccountDTOMapper accountDTOMapper(AccountFactoryMaker factory,
+                                                 UserFactoryMaker userFactoryMaker)
   {
-    return new AccountDTOMapper(factory, userFactoryMaker);
+    return new CreateAccountDTOMapper(factory, userFactoryMaker);
   }
 
   @Bean
-  public ControllerOperation<AccountDTOResponse, AccountDTORequest> createAccountOperation(
-      UseCase<AccountDTORequest, AccountDTOResponse> useCase)
+  public ControllerOperation<CreateAccountDTOResponse, CreateAccountDTORequest> createAccountOperation(
+      UseCase<CreateAccountDTORequest, CreateAccountDTOResponse> useCase)
   {
     return new CreateAccountOperation(useCase);
   }
 
   @Bean
-  public WebController<AccountDTOResponse, AccountDTORequest> createAccountWebController(
-      ControllerOperation<AccountDTOResponse, AccountDTORequest> operation)
+  public ControllerOperation<DepositDTOResponse, DepositDTORequest> createDepositOperation(
+      UseCase<DepositDTORequest, DepositDTOResponse> useCase)
+  {
+    return new DepositOperation(useCase);
+  }
+
+  @Bean
+  public WebController<CreateAccountDTOResponse, CreateAccountDTORequest> createAccountWebController(
+      ControllerOperation<CreateAccountDTOResponse, CreateAccountDTORequest> operation)
   {
     return new WebController<>(operation);
+  }
+
+  @Bean
+  public WebController<DepositDTOResponse, DepositDTORequest> depositWebController(
+      ControllerOperation<DepositDTOResponse, DepositDTORequest> operation)
+  {
+    return new WebController<>(operation);
+  }
+
+  @Bean
+  public UseCase<DepositDTORequest, DepositDTOResponse> deposit(
+      AccountRepositoryGateway accountRepository, InputValidator<DepositDTORequest> validator)
+  {
+    return new Deposit(accountRepository, validator);
+  }
+
+  @Bean
+  public InputValidator<DepositDTORequest> depositInputValidator()
+  {
+    return new JakartaDepositValidation();
   }
 }

@@ -28,9 +28,9 @@ public class AccountEntityMapper
     return mapToConcreteModel(a);
   }
 
-  public AccountEntity toEntity(Account a)
+  public AccountEntity toEntity(Account a, boolean includeId)
   {
-    return mapToConcreteEntity(a);
+    return mapToConcreteEntity(a, includeId);
   }
 
   private Account mapToConcreteModel(AccountEntity a)
@@ -49,13 +49,18 @@ public class AccountEntityMapper
     return account;
   }
 
-  private AccountEntity mapToConcreteEntity(Account a)
+  private AccountEntity mapToConcreteEntity(Account a, boolean includeId)
   {
     var document = a.getUser().getDocument();
     var account = accountEntityFactoryMaker.getFactory(document).make();
-    
+
+    if (includeId)
+    {
+      account.setId(a.getId());
+    }
+
     account.setBalance(a.getBalance());
-    account.setUser(userMapper.toEntity(a.getUser()));
+    account.setUser(userMapper.toEntity(a.getUser(), includeId));
     account.setPayerTransactions(
         a.getPayerTransactions().stream().map(transactionMapper::toEntity).toList());
     account.setPayeeTransactions(

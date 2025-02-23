@@ -23,8 +23,6 @@ public class WebController<T, R>
       return new HttpResponse<>(400, false, e.getMessage(), (T) e.getErrors());
     } catch (Exception e)
     {
-      System.out.println(e);
-
       return new HttpResponse<>(500, false, "Something went wrong, try again later", null);
     }
   }

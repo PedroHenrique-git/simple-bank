@@ -78,7 +78,7 @@ public abstract class Account
     this.balance = balance;
   }
 
-  public double withdraw(double amount) throws AccountWithoutBalanceException
+  public double withdraw(Double amount) throws AccountWithoutBalanceException
   {
     if (balance < amount)
     {
@@ -89,7 +89,7 @@ public abstract class Account
     return balance -= amount;
   }
 
-  public double deposit(double amount) throws InvalidAmountException
+  public double deposit(Double amount) throws InvalidAmountException
   {
     if (amount <= 0)
     {

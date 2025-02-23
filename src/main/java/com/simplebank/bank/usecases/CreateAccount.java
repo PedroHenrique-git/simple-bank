@@ -2,22 +2,22 @@ package com.simplebank.bank.usecases;
 
 import com.simplebank.bank.data.gateways.AccountRepositoryGateway;
 import com.simplebank.bank.domain.exceptions.ValidationErrorException;
-import com.simplebank.bank.usecases.mapper.AccountDTOMapper;
-import com.simplebank.bank.usecases.ports.AccountDTORequest;
-import com.simplebank.bank.usecases.ports.AccountDTOResponse;
-import com.simplebank.bank.usecases.ports.CreateAccountInputValidator;
+import com.simplebank.bank.usecases.mapper.CreateAccountDTOMapper;
+import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
+import com.simplebank.bank.usecases.ports.CreateAccountDTOResponse;
 import com.simplebank.bank.usecases.ports.Encoder;
+import com.simplebank.bank.usecases.ports.InputValidator;
 
-public class CreateAccount implements UseCase<AccountDTORequest, AccountDTOResponse>
+public class CreateAccount implements UseCase<CreateAccountDTORequest, CreateAccountDTOResponse>
 {
   private final AccountRepositoryGateway repository;
-  private final CreateAccountInputValidator validator;
-  private final AccountDTOMapper mapper;
+  private final InputValidator<CreateAccountDTORequest> validator;
+  private final CreateAccountDTOMapper mapper;
   private final Encoder encoder;
 
   public CreateAccount(AccountRepositoryGateway repository,
-                       CreateAccountInputValidator validator,
-                       AccountDTOMapper mapper, Encoder encoder)
+                       InputValidator<CreateAccountDTORequest> validator,
+                       CreateAccountDTOMapper mapper, Encoder encoder)
   {
     this.repository = repository;
     this.validator = validator;
@@ -26,7 +26,8 @@ public class CreateAccount implements UseCase<AccountDTORequest, AccountDTORespo
   }
 
   @Override
-  public AccountDTOResponse execute(AccountDTORequest dto) throws ValidationErrorException
+  public CreateAccountDTOResponse execute(CreateAccountDTORequest dto)
+      throws ValidationErrorException
   {
     var violations = validator.validate(dto);
 

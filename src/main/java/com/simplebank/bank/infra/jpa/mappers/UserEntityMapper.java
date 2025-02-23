@@ -22,9 +22,9 @@ public class UserEntityMapper
     return mapToConcreteModel(u);
   }
 
-  public UserEntity toEntity(User u)
+  public UserEntity toEntity(User u, boolean includeId)
   {
-    return mapToConcreteEntity(u);
+    return mapToConcreteEntity(u, includeId);
   }
 
   private User mapToConcreteModel(UserEntity u)
@@ -41,10 +41,15 @@ public class UserEntityMapper
     return user;
   }
 
-  private UserEntity mapToConcreteEntity(User u)
+  private UserEntity mapToConcreteEntity(User u, boolean includeId)
   {
     var document = u.getDocument();
     var user = userEntityFactoryMaker.getFactory(document).make();
+
+    if (includeId)
+    {
+      user.setId(u.getId());
+    }
 
     user.setName(u.getName());
     user.setEmail(u.getEmail());

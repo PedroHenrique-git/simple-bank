@@ -6,6 +6,8 @@ public interface AccountRepositoryGateway
 {
   Account save(Account account);
 
+  Account deposit(Account account);
+
   Account find(long id);
 
   void delete(long id);

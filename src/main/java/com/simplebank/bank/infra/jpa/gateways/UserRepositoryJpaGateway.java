@@ -20,7 +20,7 @@ public class UserRepositoryJpaGateway implements UserRepositoryGateway
   @Override
   public User save(User user)
   {
-    var entity = mapper.toEntity(user);
+    var entity = mapper.toEntity(user, false);
     var createdUser = repository.save(entity);
 
     return mapper.toModel(createdUser);
@@ -40,7 +40,7 @@ public class UserRepositoryJpaGateway implements UserRepositoryGateway
     user.setName(newUser.getName());
     user.setPassword(newUser.getPassword());
 
-    var entity = mapper.toEntity(user);
+    var entity = mapper.toEntity(user, true);
     var updatedUser = repository.save(entity);
 
     return mapper.toModel(updatedUser);

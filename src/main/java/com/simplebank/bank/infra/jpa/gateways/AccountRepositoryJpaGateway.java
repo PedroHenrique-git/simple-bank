@@ -24,10 +24,19 @@ public class AccountRepositoryJpaGateway implements AccountRepositoryGateway
   @Override
   public Account save(Account account)
   {
-    var entity = mapper.toEntity(account);
+    var entity = mapper.toEntity(account, false);
     var createdAccount = repository.save(entity);
 
     return mapper.toModel(createdAccount);
+  }
+
+  @Override
+  public Account deposit(Account account)
+  {
+    var entity = mapper.toEntity(account, true);
+    var updatedAccount = repository.save(entity);
+
+    return mapper.toModel(updatedAccount);
   }
 
   @Override

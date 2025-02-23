@@ -1,11 +1,9 @@
 package com.simplebank.bank.infra.validators;
 
 import com.simplebank.bank.domain.DomainRegexMap;
-import com.simplebank.bank.usecases.ports.AccountDTORequest;
-import com.simplebank.bank.usecases.ports.CreateAccountInputValidator;
+import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
+import com.simplebank.bank.usecases.ports.InputValidator;
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,13 +12,12 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 import java.util.Set;
 
-public class JakartaAccountValidation implements CreateAccountInputValidator
+public class JakartaAccountValidation extends AbstractValidator
+    implements InputValidator<CreateAccountDTORequest>
 {
   @Override
-  public List<String> validate(AccountDTORequest dto)
+  public List<String> validate(CreateAccountDTORequest dto)
   {
-    Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-
     var schema = new Schema(dto.name(), dto.email(), dto.password(), dto.document());
     Set<ConstraintViolation<Schema>> violations = validator.validate(schema);
 

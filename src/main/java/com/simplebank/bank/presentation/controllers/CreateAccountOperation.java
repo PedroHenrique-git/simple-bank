@@ -4,21 +4,22 @@ import com.simplebank.bank.domain.exceptions.ValidationErrorException;
 import com.simplebank.bank.presentation.controllers.ports.HttpRequest;
 import com.simplebank.bank.presentation.controllers.ports.HttpResponse;
 import com.simplebank.bank.usecases.UseCase;
-import com.simplebank.bank.usecases.ports.AccountDTORequest;
-import com.simplebank.bank.usecases.ports.AccountDTOResponse;
+import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
+import com.simplebank.bank.usecases.ports.CreateAccountDTOResponse;
 
 public class CreateAccountOperation
-    implements ControllerOperation<AccountDTOResponse, AccountDTORequest>
+    implements ControllerOperation<CreateAccountDTOResponse, CreateAccountDTORequest>
 {
-  private final UseCase<AccountDTORequest, AccountDTOResponse> useCase;
+  private final UseCase<CreateAccountDTORequest, CreateAccountDTOResponse> useCase;
 
-  public CreateAccountOperation(UseCase<AccountDTORequest, AccountDTOResponse> useCase)
+  public CreateAccountOperation(UseCase<CreateAccountDTORequest, CreateAccountDTOResponse> useCase)
   {
     this.useCase = useCase;
   }
 
   @Override
-  public HttpResponse<AccountDTOResponse> execute(HttpRequest<AccountDTORequest> request)
+  public HttpResponse<CreateAccountDTOResponse> execute(
+      HttpRequest<CreateAccountDTORequest> request)
       throws ValidationErrorException
   {
     var account = useCase.execute(request.body());
