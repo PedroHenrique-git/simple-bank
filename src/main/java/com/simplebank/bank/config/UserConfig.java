@@ -1,19 +1,11 @@
 package com.simplebank.bank.config;
 
-import com.simplebank.bank.data.gateway.UserRepositoryGateway;
-import com.simplebank.bank.infra.jpa.gateway.UserRepositoryJpaGateway;
-import com.simplebank.bank.infra.jpa.mapper.UserEntityMapper;
-import com.simplebank.bank.infra.jpa.repository.UserRepository;
-import com.simplebank.bank.infra.validator.JakartaUserValidation;
-import com.simplebank.bank.presentation.controller.ControllerOperation;
-import com.simplebank.bank.presentation.controller.CreateUserOperation;
-import com.simplebank.bank.presentation.controller.WebController;
-import com.simplebank.bank.usecase.CreateUser;
-import com.simplebank.bank.usecase.UseCase;
-import com.simplebank.bank.usecase.mapper.UserDTOMapper;
-import com.simplebank.bank.usecase.ports.CreateUserInputValidator;
-import com.simplebank.bank.usecase.ports.UserDTORequest;
-import com.simplebank.bank.usecase.ports.UserDTOResponse;
+import com.simplebank.bank.data.gateways.UserRepositoryGateway;
+import com.simplebank.bank.domain.factories.UserFactoryMaker;
+import com.simplebank.bank.infra.jpa.factories.UserEntityFactoryMaker;
+import com.simplebank.bank.infra.jpa.gateways.UserRepositoryJpaGateway;
+import com.simplebank.bank.infra.jpa.mappers.UserEntityMapper;
+import com.simplebank.bank.infra.jpa.repositories.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,42 +20,21 @@ public class UserConfig
   }
 
   @Bean
-  public UserEntityMapper userEntityMapper()
+  public UserEntityMapper userEntityMapper(UserFactoryMaker userFactory,
+                                           UserEntityFactoryMaker userEntityFactoryMaker)
   {
-    return new UserEntityMapper();
+    return new UserEntityMapper(userFactory, userEntityFactoryMaker);
   }
 
   @Bean
-  public UseCase<UserDTORequest, UserDTOResponse> createUser(UserRepositoryGateway userRepository,
-                                                             CreateUserInputValidator validator,
-                                                             UserDTOMapper mapper)
+  public UserFactoryMaker userFactoryMaker()
   {
-    return new CreateUser(userRepository, validator, mapper);
+    return new UserFactoryMaker();
   }
 
   @Bean
-  public CreateUserInputValidator createUserInputValidator()
+  public UserEntityFactoryMaker userEntityFactoryMaker()
   {
-    return new JakartaUserValidation();
-  }
-
-  @Bean
-  public UserDTOMapper userDTOMapper()
-  {
-    return new UserDTOMapper();
-  }
-
-  @Bean
-  public ControllerOperation<UserDTOResponse, UserDTORequest> createUserOperation(
-      UseCase<UserDTORequest, UserDTOResponse> useCase)
-  {
-    return new CreateUserOperation(useCase);
-  }
-
-  @Bean
-  public WebController<UserDTOResponse, UserDTORequest> createUserWebController(
-      ControllerOperation<UserDTOResponse, UserDTORequest> operation)
-  {
-    return new WebController<>(operation);
+    return new UserEntityFactoryMaker();
   }
 }

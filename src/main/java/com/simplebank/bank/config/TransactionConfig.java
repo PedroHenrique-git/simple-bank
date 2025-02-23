@@ -1,10 +1,10 @@
 package com.simplebank.bank.config;
 
-import com.simplebank.bank.data.gateway.TransactionRepositoryGateway;
-import com.simplebank.bank.infra.jpa.gateway.TransactionRepositoryJpaGateway;
-import com.simplebank.bank.infra.jpa.mapper.AccountEntityMapper;
-import com.simplebank.bank.infra.jpa.mapper.TransactionEntityMapper;
-import com.simplebank.bank.infra.jpa.repository.TransactionRepository;
+import com.simplebank.bank.data.gateways.TransactionRepositoryGateway;
+import com.simplebank.bank.infra.jpa.gateways.TransactionRepositoryJpaGateway;
+import com.simplebank.bank.infra.jpa.mappers.AccountEntityMapper;
+import com.simplebank.bank.infra.jpa.mappers.TransactionEntityMapper;
+import com.simplebank.bank.infra.jpa.repositories.TransactionRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
