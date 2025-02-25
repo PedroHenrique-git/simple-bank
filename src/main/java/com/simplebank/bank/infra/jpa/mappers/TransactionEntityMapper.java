@@ -32,7 +32,7 @@ public class TransactionEntityMapper
   private TransactionEntity mapToConcreteEntity(Transaction m)
   {
     return new TransactionEntity(m.getId(), m.getValue(),
-        accountMapper.toEntity(m.getPayer(), false),
-        accountMapper.toEntity(m.getPayee(), false));
+        accountMapper.toEntity(m.getPayer(), true),
+        accountMapper.toEntity(m.getPayee(), true));
   }
 }

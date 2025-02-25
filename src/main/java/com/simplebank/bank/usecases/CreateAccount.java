@@ -7,6 +7,7 @@ import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
 import com.simplebank.bank.usecases.ports.CreateAccountDTOResponse;
 import com.simplebank.bank.usecases.ports.Encoder;
 import com.simplebank.bank.usecases.ports.InputValidator;
+import org.springframework.transaction.annotation.Transactional;
 
 public class CreateAccount implements UseCase<CreateAccountDTORequest, CreateAccountDTOResponse>
 {
@@ -26,6 +27,7 @@ public class CreateAccount implements UseCase<CreateAccountDTORequest, CreateAcc
   }
 
   @Override
+  @Transactional
   public CreateAccountDTOResponse execute(CreateAccountDTORequest dto)
       throws ValidationErrorException
   {

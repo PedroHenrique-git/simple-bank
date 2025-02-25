@@ -36,9 +36,14 @@ public class Deposit implements UseCase<DepositDTORequest, DepositDTOResponse>
 
       var account = repository.find(dto.accountId());
 
+      if (account == null)
+      {
+        throw new ValidationErrorException("Invalid deposit input", List.of("Invalid accountId"));
+      }
+
       account.deposit(dto.amount());
 
-      var updatedAccount = repository.deposit(account);
+      var updatedAccount = repository.update(account);
 
       return new DepositDTOResponse(updatedAccount.getBalance());
     } catch (InvalidAmountException e)

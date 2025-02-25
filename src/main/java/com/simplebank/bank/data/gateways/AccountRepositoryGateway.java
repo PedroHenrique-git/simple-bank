@@ -6,7 +6,7 @@ public interface AccountRepositoryGateway
 {
   Account save(Account account);
 
-  Account deposit(Account account);
+  Account update(Account account);
 
   Account find(long id);
 
