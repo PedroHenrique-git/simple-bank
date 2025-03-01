@@ -30,7 +30,7 @@ public class CreateAccountDTOMapper
     var document = dto.document();
     var account = accountFactoryMaker.getFactory(document).make();
     var user = userFactoryMaker.getFactory(document).make();
-    
+
     user.setName(dto.name());
     user.setEmail(dto.email());
     user.setPassword(dto.password());
