@@ -1,4 +1,4 @@
-package com.simplebank.bank;
+package com.simplebank.bank.factories;
 
 import com.simplebank.bank.domain.factories.AccountFactoryMaker;
 import com.simplebank.bank.domain.factories.BusinessAccountFactory;

@@ -1,15 +1,15 @@
-package com.simplebank.bank;
+package com.simplebank.bank.gateways;
 
 import com.simplebank.bank.config.AccountConfig;
 import com.simplebank.bank.config.CommonConfig;
 import com.simplebank.bank.config.TransactionConfig;
 import com.simplebank.bank.config.UserConfig;
 import com.simplebank.bank.data.gateways.AccountRepositoryGateway;
-import com.simplebank.bank.domain.models.Account.ClientAccount;
-import com.simplebank.bank.domain.models.User.ClientUser;
-import java.util.List;
+import com.simplebank.bank.mocks.AccountMock;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -28,24 +28,42 @@ public class AccountRepositoryGatewayTests
   @Test
   void testCreateAccount()
   {
-    var account = new ClientAccount();
-    var user = new ClientUser();
-
-    user.setName("Test");
-    user.setPassword("123");
-    user.setEmail("t@email.com");
-    user.setDocument("111.111.111-11");
-
-    account.setUser(user);
-    account.setPayeeTransactions(List.of());
-    account.setPayerTransactions(List.of());
-
-    var result = gateway.save(account);
+    var result = gateway.save(AccountMock.create());
 
     assertNotNull(result);
     assertNotNull(result.getUser());
 
     assertEquals("t@email.com", result.getUser().getEmail());
     assertEquals(0, result.getBalance());
+  }
+
+  @Test
+  void testFindAccount()
+  {
+    var result = gateway.save(AccountMock.create());
+
+    assertNotNull(gateway.find(result.getId()));
+    assertNull(gateway.find(0L));
+  }
+
+  @Test
+  void testUpdateAccount()
+  {
+    var result = gateway.save(AccountMock.create());
+
+    result.setBalance(10000);
+
+    var updatedAccount = gateway.update(result);
+
+    assertNotNull(updatedAccount);
+    assertEquals(10000, updatedAccount.getBalance());
+  }
+
+  @Test
+  void testDeleteAccount()
+  {
+    var result = gateway.save(AccountMock.create());
+
+    assertDoesNotThrow(() -> gateway.delete(result.getId()));
   }
 }

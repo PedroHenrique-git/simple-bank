@@ -1,4 +1,4 @@
-package com.simplebank.bank;
+package com.simplebank.bank.factories;
 
 import com.simplebank.bank.infra.jpa.entities.BusinessUserEntity;
 import com.simplebank.bank.infra.jpa.entities.ClientUserEntity;

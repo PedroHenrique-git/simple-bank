@@ -4,5 +4,5 @@ import com.simplebank.bank.domain.models.Transaction.Transaction;
 
 public interface TransactionRepositoryGateway
 {
-  Transaction save(Transaction user);
+  Transaction save(Transaction transaction);
 }

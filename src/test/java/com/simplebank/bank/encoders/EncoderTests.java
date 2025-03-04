@@ -1,4 +1,4 @@
-package com.simplebank.bank;
+package com.simplebank.bank.encoders;
 
 import com.simplebank.bank.infra.encoders.BcryptEncoder;
 import static org.junit.jupiter.api.Assertions.assertFalse;

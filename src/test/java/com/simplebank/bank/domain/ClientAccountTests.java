@@ -1,4 +1,4 @@
-package com.simplebank.bank;
+package com.simplebank.bank.domain;
 
 import com.simplebank.bank.domain.exceptions.AccountWithoutBalanceException;
 import com.simplebank.bank.domain.exceptions.InvalidAmountException;

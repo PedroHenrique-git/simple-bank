@@ -25,14 +25,18 @@ public class TransactionEntityMapper
         t.getId(),
         accountMapper.toModel(t.getPayer()),
         accountMapper.toModel(t.getPayee()),
-        t.getValue()
+        t.getAmount()
     );
   }
 
   private TransactionEntity mapToConcreteEntity(Transaction m)
   {
-    return new TransactionEntity(m.getId(), m.getValue(),
-        accountMapper.toEntity(m.getPayer(), true),
-        accountMapper.toEntity(m.getPayee(), true));
+    var transactionEntity = new TransactionEntity();
+
+    transactionEntity.setAmount(m.getAmount());
+    transactionEntity.setPayer(accountMapper.toEntity(m.getPayer(), true));
+    transactionEntity.setPayee(accountMapper.toEntity(m.getPayee(), true));
+
+    return transactionEntity;
   }
 }

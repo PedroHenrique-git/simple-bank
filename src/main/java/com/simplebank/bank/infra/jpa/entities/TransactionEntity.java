@@ -1,6 +1,7 @@
 package com.simplebank.bank.infra.jpa.entities;
 
 import jakarta.annotation.Nonnull;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,15 +25,15 @@ public class TransactionEntity
   private Long id;
 
   @Nonnull
-  private Double value;
+  private Double amount;
 
   @Nonnull
-  @ManyToOne
+  @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
   @JoinColumn(name = "payer_id", updatable = false, insertable = false)
   private AccountEntity payer;
 
   @Nonnull
-  @ManyToOne
+  @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
   @JoinColumn(name = "payee_id", updatable = false, insertable = false)
   private AccountEntity payee;
 }

@@ -7,18 +7,18 @@ public class Transaction
   private long id;
   private Account payer;
   private Account payee;
-  private double value;
+  private double amount;
 
   public Transaction()
   {
   }
 
-  public Transaction(long id, Account payer, Account payee, double value)
+  public Transaction(long id, Account payer, Account payee, double amount)
   {
     this.id = id;
     this.payer = payer;
     this.payee = payee;
-    this.value = value;
+    this.amount = amount;
   }
 
   public long getId()
@@ -51,8 +51,8 @@ public class Transaction
     this.payee = payee;
   }
 
-  public double getValue()
+  public double getAmount()
   {
-    return value;
+    return amount;
   }
 }
