@@ -31,7 +31,7 @@ public class UserRepositoryGatewayTests
     var result = gateway.save(UserMock.createClientUser());
 
     assertNotNull(result);
-    assertEquals("test@email.com", result.getEmail());
+    assertEquals("test-user@email.com", result.getEmail());
   }
 
   @Test

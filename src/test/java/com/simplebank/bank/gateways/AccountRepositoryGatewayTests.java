@@ -33,7 +33,7 @@ public class AccountRepositoryGatewayTests
     assertNotNull(result);
     assertNotNull(result.getUser());
 
-    assertEquals("t@email.com", result.getUser().getEmail());
+    assertEquals("test-user@email.com", result.getUser().getEmail());
     assertEquals(0, result.getBalance());
   }
 
