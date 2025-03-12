@@ -21,7 +21,8 @@ public class CreateAccountDTOMapper
 
   public CreateAccountDTOResponse toResponse(Account account)
   {
-    return new CreateAccountDTOResponse(account.getUser().getId(), account.getUser().getName(),
+    return new CreateAccountDTOResponse(account.getId(), account.getUser().getId(),
+        account.getUser().getName(),
         account.getUser().getEmail());
   }
 

@@ -1,6 +1,7 @@
 package com.simplebank.bank.presentation.controllers;
 
-import com.simplebank.bank.domain.exceptions.ValidationErrorException;
+import com.simplebank.bank.domain.exceptions.UseCaseException;
+import com.simplebank.bank.presentation.controllers.http.HttpStatus;
 import com.simplebank.bank.presentation.controllers.ports.HttpRequest;
 import com.simplebank.bank.presentation.controllers.ports.HttpResponse;
 import com.simplebank.bank.usecases.UseCase;
@@ -20,10 +21,11 @@ public class CreateAccountOperation
   @Override
   public HttpResponse<CreateAccountDTOResponse> execute(
       HttpRequest<CreateAccountDTORequest> request)
-      throws ValidationErrorException
+      throws UseCaseException
   {
     var account = useCase.execute(request.body());
 
-    return new HttpResponse<>(201, true, "account created successfully", account);
+    return new HttpResponse<>(HttpStatus.CREATED.value(), true, "account created successfully",
+        account);
   }
 }

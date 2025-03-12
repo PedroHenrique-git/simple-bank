@@ -2,7 +2,7 @@ package com.simplebank.bank.usecases;
 
 import com.simplebank.bank.data.gateways.AccountRepositoryGateway;
 import com.simplebank.bank.domain.exceptions.InvalidAmountException;
-import com.simplebank.bank.domain.exceptions.ValidationErrorException;
+import com.simplebank.bank.domain.exceptions.UseCaseException;
 import com.simplebank.bank.usecases.ports.DepositDTORequest;
 import com.simplebank.bank.usecases.ports.DepositDTOResponse;
 import com.simplebank.bank.usecases.ports.InputValidator;
@@ -23,7 +23,7 @@ public class Deposit implements UseCase<DepositDTORequest, DepositDTOResponse>
   @Override
   @Transactional
   public DepositDTOResponse execute(DepositDTORequest dto)
-      throws ValidationErrorException
+      throws UseCaseException
   {
     try
     {
@@ -31,14 +31,14 @@ public class Deposit implements UseCase<DepositDTORequest, DepositDTOResponse>
 
       if (!violations.isEmpty())
       {
-        throw new ValidationErrorException("Invalid deposit input", violations);
+        throw new UseCaseException("Invalid deposit input", violations);
       }
 
       var account = repository.find(dto.accountId());
 
       if (account == null)
       {
-        throw new ValidationErrorException("Invalid deposit input", List.of("Invalid accountId"));
+        throw new UseCaseException("Invalid deposit input", List.of("Invalid accountId"));
       }
 
       account.deposit(dto.amount());
@@ -48,7 +48,7 @@ public class Deposit implements UseCase<DepositDTORequest, DepositDTOResponse>
       return new DepositDTOResponse(updatedAccount.getBalance());
     } catch (InvalidAmountException e)
     {
-      throw new ValidationErrorException("Invalid deposit input", List.of(e.getMessage()));
+      throw new UseCaseException("Invalid deposit input", List.of(e.getMessage()));
     }
   }
 }

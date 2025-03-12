@@ -1,6 +1,7 @@
 package com.simplebank.bank.presentation.controllers;
 
-import com.simplebank.bank.domain.exceptions.ValidationErrorException;
+import com.simplebank.bank.domain.exceptions.UseCaseException;
+import com.simplebank.bank.presentation.controllers.http.HttpStatus;
 import com.simplebank.bank.presentation.controllers.ports.HttpRequest;
 import com.simplebank.bank.presentation.controllers.ports.HttpResponse;
 
@@ -18,12 +19,14 @@ public class WebController<T, R>
     try
     {
       return operation.execute(request);
-    } catch (ValidationErrorException e)
+    } catch (UseCaseException e)
     {
-      return new HttpResponse<>(400, false, e.getMessage(), (T) e.getErrors());
+      return new HttpResponse<>(HttpStatus.BAD_REQUEST.value(), false, e.getMessage(), null,
+          e.getErrors());
     } catch (Exception e)
     {
-      return new HttpResponse<>(500, false, "Something went wrong, try again later", null);
+      return new HttpResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), false,
+          "Something went wrong, try again later", null);
     }
   }
 }

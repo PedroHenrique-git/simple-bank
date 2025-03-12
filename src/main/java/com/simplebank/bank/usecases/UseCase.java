@@ -1,8 +1,8 @@
 package com.simplebank.bank.usecases;
 
-import com.simplebank.bank.domain.exceptions.ValidationErrorException;
+import com.simplebank.bank.domain.exceptions.UseCaseException;
 
 public interface UseCase<T, R>
 {
-  R execute(T data) throws ValidationErrorException;
+  R execute(T data) throws UseCaseException;
 }

@@ -1,7 +1,7 @@
 package com.simplebank.bank.usecases;
 
 import com.simplebank.bank.data.gateways.AccountRepositoryGateway;
-import com.simplebank.bank.domain.exceptions.ValidationErrorException;
+import com.simplebank.bank.domain.exceptions.UseCaseException;
 import com.simplebank.bank.usecases.mapper.CreateAccountDTOMapper;
 import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
 import com.simplebank.bank.usecases.ports.CreateAccountDTOResponse;
@@ -29,13 +29,13 @@ public class CreateAccount implements UseCase<CreateAccountDTORequest, CreateAcc
   @Override
   @Transactional
   public CreateAccountDTOResponse execute(CreateAccountDTORequest dto)
-      throws ValidationErrorException
+      throws UseCaseException
   {
     var violations = validator.validate(dto);
 
     if (!violations.isEmpty())
     {
-      throw new ValidationErrorException("Invalid User input", violations);
+      throw new UseCaseException("Invalid User input", violations);
     }
 
     var model = mapper.toAccount(dto);

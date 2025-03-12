@@ -32,7 +32,7 @@ public class DepositSpringController extends AbstractSpringController
 
     body.put("message", response.message());
     body.put("success", response.success());
-    body.set("data", mapper.valueToTree(response.body()));
+    setBodyData(response.errors(), response.body());
 
     return ResponseEntity.status(response.status()).body(body);
   }
