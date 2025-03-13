@@ -14,9 +14,11 @@ import com.simplebank.bank.infra.validators.JakartaDepositValidation;
 import com.simplebank.bank.presentation.controllers.ControllerOperation;
 import com.simplebank.bank.presentation.controllers.CreateAccountOperation;
 import com.simplebank.bank.presentation.controllers.DepositOperation;
+import com.simplebank.bank.presentation.controllers.TransferOperation;
 import com.simplebank.bank.presentation.controllers.WebController;
 import com.simplebank.bank.usecases.CreateAccount;
 import com.simplebank.bank.usecases.Deposit;
+import com.simplebank.bank.usecases.Transfer;
 import com.simplebank.bank.usecases.UseCase;
 import com.simplebank.bank.usecases.mapper.CreateAccountDTOMapper;
 import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
@@ -25,6 +27,9 @@ import com.simplebank.bank.usecases.ports.DepositDTORequest;
 import com.simplebank.bank.usecases.ports.DepositDTOResponse;
 import com.simplebank.bank.usecases.ports.Encoder;
 import com.simplebank.bank.usecases.ports.InputValidator;
+import com.simplebank.bank.usecases.ports.TransferAuthService;
+import com.simplebank.bank.usecases.ports.TransferDTORequest;
+import com.simplebank.bank.usecases.ports.TransferDTOResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -99,6 +104,20 @@ public class AccountConfig
   }
 
   @Bean
+  public ControllerOperation<TransferDTOResponse, TransferDTORequest> transferOperation(
+      UseCase<TransferDTORequest, TransferDTOResponse> useCase)
+  {
+    return new TransferOperation(useCase);
+  }
+
+  @Bean
+  public WebController<TransferDTOResponse, TransferDTORequest> transferWebController(
+      ControllerOperation<TransferDTOResponse, TransferDTORequest> operation)
+  {
+    return new WebController<>(operation);
+  }
+
+  @Bean
   public WebController<CreateAccountDTOResponse, CreateAccountDTORequest> createAccountWebController(
       ControllerOperation<CreateAccountDTOResponse, CreateAccountDTORequest> operation)
   {
@@ -117,6 +136,13 @@ public class AccountConfig
       AccountRepositoryGateway accountRepository, InputValidator<DepositDTORequest> validator)
   {
     return new Deposit(accountRepository, validator);
+  }
+
+  @Bean
+  public UseCase<TransferDTORequest, TransferDTOResponse> transfer(
+      AccountRepositoryGateway accountRepository, TransferAuthService transferAuthService)
+  {
+    return new Transfer(accountRepository, transferAuthService);
   }
 
   @Bean
