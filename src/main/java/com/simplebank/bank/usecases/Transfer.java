@@ -37,7 +37,7 @@ public class Transfer implements UseCase<TransferDTORequest, TransferDTOResponse
 
       if (!transferAuthService.authorize())
       {
-        throw new UseCaseException("The transfer can't be made");
+        throw new UseCaseException("The transfer was not authorized");
       }
 
       var payee = repository.find(dto.payeeId());

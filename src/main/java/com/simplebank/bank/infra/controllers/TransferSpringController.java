@@ -26,7 +26,7 @@ public class TransferSpringController extends AbstractSpringController
   }
 
   @PostMapping
-  public ResponseEntity<ObjectNode> deposit(@RequestBody TransferDTORequest transfer)
+  public ResponseEntity<ObjectNode> transfer(@RequestBody TransferDTORequest transfer)
   {
     var response = controller.handle(new HttpRequest<>(transfer));
 
