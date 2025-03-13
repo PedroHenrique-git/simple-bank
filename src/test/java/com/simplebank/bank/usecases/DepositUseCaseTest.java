@@ -33,14 +33,14 @@ public class DepositUseCaseTest
   void testDepositUseCase() throws UseCaseException
   {
     var account = createAccountUseCase.execute(
-        new CreateAccountDTORequest("Pedro", "p1@email.com", "AA!45aaa", "222.222.222-22"));
+        new CreateAccountDTORequest("Pedro", "p3@email.com", "AA!45aaa", "444.444.444-44"));
 
     assertThrows(UseCaseException.class,
         () -> usecase.execute(new DepositDTORequest(-1L, 0.0)));
     assertThrows(UseCaseException.class,
-        () -> usecase.execute(new DepositDTORequest(account.id(), 0.0)));
+        () -> usecase.execute(new DepositDTORequest(account.accountId(), 0.0)));
 
-    var updatedAccount = usecase.execute(new DepositDTORequest(account.id(), 100.0));
+    var updatedAccount = usecase.execute(new DepositDTORequest(account.accountId(), 100.0));
 
     assertEquals(100, updatedAccount.balance());
   }

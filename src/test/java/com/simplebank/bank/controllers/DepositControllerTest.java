@@ -10,10 +10,10 @@ import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
 import com.simplebank.bank.usecases.ports.CreateAccountDTOResponse;
 import com.simplebank.bank.usecases.ports.DepositDTORequest;
 import com.simplebank.bank.usecases.ports.DepositDTOResponse;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,22 +37,26 @@ public class DepositControllerTest
   void testDepositController()
   {
     var account = accountController.handle(new HttpRequest<>(
-        new CreateAccountDTORequest("pedro", "p@email.com", "AA!45aaa", "111.111.111-11")));
+        new CreateAccountDTORequest("pedro", "p2@email.com", "AA!45aaa", "222.222.222-22")));
 
     var responseWithError =
-        controller.handle(new HttpRequest<>(new DepositDTORequest(account.body().id(), -100.0)));
+        controller.handle(
+            new HttpRequest<>(new DepositDTORequest(account.body().accountId(), -100.0)));
 
     assertEquals(400, responseWithError.status());
     assertEquals("Invalid deposit input", responseWithError.message());
-    assertInstanceOf(List.class, responseWithError.body());
+    assertNull(responseWithError.body());
+    assertFalse(responseWithError.errors().isEmpty());
     assertFalse(responseWithError.success());
 
     var responseWithSuccess =
-        controller.handle(new HttpRequest<>(new DepositDTORequest(account.body().id(), 100.0)));
+        controller.handle(
+            new HttpRequest<>(new DepositDTORequest(account.body().accountId(), 100.0)));
 
     assertEquals(200, responseWithSuccess.status());
     assertEquals("deposit made successfully", responseWithSuccess.message());
     assertInstanceOf(DepositDTOResponse.class, responseWithSuccess.body());
+    assertTrue(responseWithSuccess.errors().isEmpty());
     assertTrue(responseWithSuccess.success());
   }
 }

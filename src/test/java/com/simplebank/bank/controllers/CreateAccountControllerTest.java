@@ -8,10 +8,10 @@ import com.simplebank.bank.presentation.controllers.WebController;
 import com.simplebank.bank.presentation.controllers.ports.HttpRequest;
 import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
 import com.simplebank.bank.usecases.ports.CreateAccountDTOResponse;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,8 @@ public class CreateAccountControllerTest
 
     assertEquals(400, responseWithError.status());
     assertEquals("Invalid User input", responseWithError.message());
-    assertInstanceOf(List.class, responseWithError.body());
+    assertNull(responseWithError.body());
+    assertFalse(responseWithError.errors().isEmpty());
     assertFalse(responseWithError.success());
 
     var responseWithSuccess = controller.handle(new HttpRequest<>(
@@ -45,6 +46,7 @@ public class CreateAccountControllerTest
     assertEquals(201, responseWithSuccess.status());
     assertEquals("account created successfully", responseWithSuccess.message());
     assertInstanceOf(CreateAccountDTOResponse.class, responseWithSuccess.body());
+    assertTrue(responseWithSuccess.errors().isEmpty());
     assertTrue(responseWithSuccess.success());
   }
 }

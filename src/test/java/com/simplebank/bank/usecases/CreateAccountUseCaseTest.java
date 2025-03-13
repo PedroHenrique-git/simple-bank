@@ -37,10 +37,10 @@ public class CreateAccountUseCaseTest
 
 
     var response = usecase.execute(
-        new CreateAccountDTORequest("Pedro", "p@email.com", "AA!45aaa", "111.111.111-11"));
+        new CreateAccountDTORequest("Pedro", "p1@email.com", "AA!45aaa", "333.333.333-33"));
 
-    assertNotNull(response.id());
-    assertEquals("p@email.com", response.email());
+    assertNotNull(response.accountId());
+    assertEquals("p1@email.com", response.email());
     assertEquals("Pedro", response.name());
   }
 }
