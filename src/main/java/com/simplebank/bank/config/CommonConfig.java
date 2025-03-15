@@ -9,16 +9,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.support.TransactionTemplate;
 
 @Configuration
-@EnableTransactionManagement
 public class CommonConfig
 {
-  @Value("${transfer.auth.url}")
-  private String url;
-
   @Bean
   public BCryptPasswordEncoder bCryptPasswordEncoder()
   {
@@ -26,9 +21,10 @@ public class CommonConfig
   }
 
   @Bean
-  public TransferAuthService transferAuthService()
+  public TransferAuthService transferAuthService(
+      @Value("${transfer.auth.url}") String transferAuthUrl)
   {
-    return new TransferAuthServiceInRest(url);
+    return new TransferAuthServiceInRest(transferAuthUrl);
   }
 
   @Bean

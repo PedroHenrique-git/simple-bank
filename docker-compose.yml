@@ -29,9 +29,34 @@ services:
     networks:
       - app
 
+  mailhog:
+    image: mailhog/mailhog:latest
+    restart: always
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - app
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    env_file: .env
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBIT_MQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_MQ_PASSWORD}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+      - "15671:15671"
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
+    networks:
+      - app
+
 networks:
   app:
     driver: bridge
 
 volumes:
   postgres:
+  rabbitmq:
