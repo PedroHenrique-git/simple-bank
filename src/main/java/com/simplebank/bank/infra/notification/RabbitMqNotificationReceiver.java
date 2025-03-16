@@ -3,13 +3,11 @@ package com.simplebank.bank.infra.notification;
 import com.simplebank.bank.infra.currency.FormatCurrency;
 import com.simplebank.bank.infra.serialization.SerializationUtils;
 import com.simplebank.bank.services.EmailService;
-import com.simplebank.bank.usecases.ports.TransferNotificationPayload;
-import lombok.extern.slf4j.Slf4j;
+import com.simplebank.bank.usecases.ports.TransferNotificationDTO;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
-@Slf4j
 public class RabbitMqNotificationReceiver
 {
   private final EmailService emailService;
@@ -37,8 +35,8 @@ public class RabbitMqNotificationReceiver
             FormatCurrency.format(transferValue)));
   }
 
-  private TransferNotificationPayload deserializePayload(String payload)
+  private TransferNotificationDTO deserializePayload(String payload)
   {
-    return SerializationUtils.fromJson(payload, TransferNotificationPayload.class);
+    return SerializationUtils.fromJson(payload, TransferNotificationDTO.class);
   }
 }

@@ -12,15 +12,19 @@ import com.simplebank.bank.infra.jpa.mappers.UserEntityMapper;
 import com.simplebank.bank.infra.jpa.repositories.AccountRepository;
 import com.simplebank.bank.infra.validators.JakartaAccountValidation;
 import com.simplebank.bank.infra.validators.JakartaDepositValidation;
+import com.simplebank.bank.infra.validators.JakartaTransferValidation;
+import com.simplebank.bank.infra.validators.JakartaWithdrawValidation;
 import com.simplebank.bank.presentation.controllers.ControllerOperation;
 import com.simplebank.bank.presentation.controllers.CreateAccountOperation;
 import com.simplebank.bank.presentation.controllers.DepositOperation;
 import com.simplebank.bank.presentation.controllers.TransferOperation;
 import com.simplebank.bank.presentation.controllers.WebController;
+import com.simplebank.bank.presentation.controllers.WithdrawOperation;
 import com.simplebank.bank.usecases.CreateAccount;
 import com.simplebank.bank.usecases.Deposit;
 import com.simplebank.bank.usecases.Transfer;
 import com.simplebank.bank.usecases.UseCase;
+import com.simplebank.bank.usecases.Withdraw;
 import com.simplebank.bank.usecases.mapper.CreateAccountDTOMapper;
 import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
 import com.simplebank.bank.usecases.ports.CreateAccountDTOResponse;
@@ -32,6 +36,8 @@ import com.simplebank.bank.usecases.ports.TransferAuthService;
 import com.simplebank.bank.usecases.ports.TransferDTORequest;
 import com.simplebank.bank.usecases.ports.TransferDTOResponse;
 import com.simplebank.bank.usecases.ports.TransferNotificationSender;
+import com.simplebank.bank.usecases.ports.WithdrawDTORequest;
+import com.simplebank.bank.usecases.ports.WithdrawDTOResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -107,9 +113,23 @@ public class AccountConfig
 
   @Bean
   public ControllerOperation<TransferDTOResponse, TransferDTORequest> transferOperation(
-      UseCase<TransferDTORequest, TransferDTOResponse> useCase)
+      UseCase<TransferDTORequest, TransferDTOResponse> usecase)
   {
-    return new TransferOperation(useCase);
+    return new TransferOperation(usecase);
+  }
+
+  @Bean
+  public ControllerOperation<WithdrawDTOResponse, WithdrawDTORequest> withdrawOperation(
+      UseCase<WithdrawDTORequest, WithdrawDTOResponse> usecase)
+  {
+    return new WithdrawOperation(usecase);
+  }
+
+  @Bean
+  public WebController<WithdrawDTOResponse, WithdrawDTORequest> withdrawWebController(
+      ControllerOperation<WithdrawDTOResponse, WithdrawDTORequest> operation)
+  {
+    return new WebController<>(operation);
   }
 
   @Bean
@@ -144,15 +164,34 @@ public class AccountConfig
   public UseCase<TransferDTORequest, TransferDTOResponse> transfer(
       AccountRepositoryGateway accountRepository,
       TransactionRepositoryGateway transactionRepository, TransferAuthService transferAuthService,
-      TransferNotificationSender notificationSender)
+      TransferNotificationSender notificationSender, InputValidator<TransferDTORequest> validator)
   {
     return new Transfer(accountRepository, transactionRepository, transferAuthService,
-        notificationSender);
+        notificationSender, validator);
+  }
+
+  @Bean
+  public UseCase<WithdrawDTORequest, WithdrawDTOResponse> withdraw(
+      AccountRepositoryGateway accountRepository, InputValidator<WithdrawDTORequest> validator)
+  {
+    return new Withdraw(accountRepository, validator);
   }
 
   @Bean
   public InputValidator<DepositDTORequest> depositInputValidator()
   {
     return new JakartaDepositValidation();
+  }
+
+  @Bean
+  public InputValidator<TransferDTORequest> transferInputValidator()
+  {
+    return new JakartaTransferValidation();
+  }
+
+  @Bean
+  public InputValidator<WithdrawDTORequest> withdrawInputValidator()
+  {
+    return new JakartaWithdrawValidation();
   }
 }
