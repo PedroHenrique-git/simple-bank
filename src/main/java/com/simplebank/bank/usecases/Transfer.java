@@ -1,25 +1,36 @@
 package com.simplebank.bank.usecases;
 
 import com.simplebank.bank.data.gateways.AccountRepositoryGateway;
+import com.simplebank.bank.data.gateways.TransactionRepositoryGateway;
 import com.simplebank.bank.domain.exceptions.AccountWithoutBalanceException;
 import com.simplebank.bank.domain.exceptions.InvalidAmountException;
 import com.simplebank.bank.domain.exceptions.UseCaseException;
 import com.simplebank.bank.domain.models.Account.BusinessAccount;
 import com.simplebank.bank.domain.models.Account.ClientAccount;
+import com.simplebank.bank.domain.models.Transaction.Transaction;
 import com.simplebank.bank.usecases.ports.TransferAuthService;
 import com.simplebank.bank.usecases.ports.TransferDTORequest;
 import com.simplebank.bank.usecases.ports.TransferDTOResponse;
+import com.simplebank.bank.usecases.ports.TransferNotificationPayload;
+import com.simplebank.bank.usecases.ports.TransferNotificationSender;
 import org.springframework.transaction.annotation.Transactional;
 
 public class Transfer implements UseCase<TransferDTORequest, TransferDTOResponse>
 {
   private final AccountRepositoryGateway repository;
+  private final TransactionRepositoryGateway transactionRepository;
   private final TransferAuthService transferAuthService;
+  private final TransferNotificationSender notificationSender;
 
-  public Transfer(AccountRepositoryGateway repository, TransferAuthService transferAuthService)
+  public Transfer(AccountRepositoryGateway repository,
+                  TransactionRepositoryGateway transactionRepository,
+                  TransferAuthService transferAuthService,
+                  TransferNotificationSender notificationSender)
   {
     this.repository = repository;
+    this.transactionRepository = transactionRepository;
     this.transferAuthService = transferAuthService;
+    this.notificationSender = notificationSender;
   }
 
   @Override
@@ -45,10 +56,16 @@ public class Transfer implements UseCase<TransferDTORequest, TransferDTOResponse
 
       payer.transfer(dto.value(), payee);
 
-      repository.update(payer);
-      repository.update(payee);
+      var updatedPayer = repository.update(payer);
+      var updatedPayee = repository.update(payee);
 
-      return new TransferDTOResponse(payer.getBalance());
+      var resultTransaction =
+          transactionRepository.save(new Transaction(0, updatedPayer, updatedPayee, dto.value()));
+
+      notificationSender.send(new TransferNotificationPayload(updatedPayer.getUser().getEmail(),
+          updatedPayee.getUser().getEmail(), resultTransaction.getAmount()));
+
+      return new TransferDTOResponse(updatedPayer.getBalance());
     } catch (InvalidAmountException | AccountWithoutBalanceException e)
     {
       throw new UseCaseException(e.getMessage());

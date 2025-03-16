@@ -1,6 +1,7 @@
 package com.simplebank.bank.config;
 
 import com.simplebank.bank.data.gateways.AccountRepositoryGateway;
+import com.simplebank.bank.data.gateways.TransactionRepositoryGateway;
 import com.simplebank.bank.domain.factories.AccountFactoryMaker;
 import com.simplebank.bank.domain.factories.UserFactoryMaker;
 import com.simplebank.bank.infra.jpa.factories.AccountEntityFactoryMaker;
@@ -30,6 +31,7 @@ import com.simplebank.bank.usecases.ports.InputValidator;
 import com.simplebank.bank.usecases.ports.TransferAuthService;
 import com.simplebank.bank.usecases.ports.TransferDTORequest;
 import com.simplebank.bank.usecases.ports.TransferDTOResponse;
+import com.simplebank.bank.usecases.ports.TransferNotificationSender;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -140,9 +142,12 @@ public class AccountConfig
 
   @Bean
   public UseCase<TransferDTORequest, TransferDTOResponse> transfer(
-      AccountRepositoryGateway accountRepository, TransferAuthService transferAuthService)
+      AccountRepositoryGateway accountRepository,
+      TransactionRepositoryGateway transactionRepository, TransferAuthService transferAuthService,
+      TransferNotificationSender notificationSender)
   {
-    return new Transfer(accountRepository, transferAuthService);
+    return new Transfer(accountRepository, transactionRepository, transferAuthService,
+        notificationSender);
   }
 
   @Bean

@@ -29,11 +29,11 @@ public class TransactionEntity
 
   @Nonnull
   @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
-  @JoinColumn(name = "payer_id", updatable = false, insertable = false)
+  @JoinColumn(name = "payer_id")
   private AccountEntity payer;
 
   @Nonnull
   @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
-  @JoinColumn(name = "payee_id", updatable = false, insertable = false)
+  @JoinColumn(name = "payee_id")
   private AccountEntity payee;
 }

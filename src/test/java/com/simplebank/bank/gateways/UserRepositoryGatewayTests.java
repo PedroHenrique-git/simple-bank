@@ -1,9 +1,5 @@
 package com.simplebank.bank.gateways;
 
-import com.simplebank.bank.config.AccountConfig;
-import com.simplebank.bank.config.CommonConfig;
-import com.simplebank.bank.config.TransactionConfig;
-import com.simplebank.bank.config.UserConfig;
 import com.simplebank.bank.data.gateways.UserRepositoryGateway;
 import com.simplebank.bank.mocks.UserMock;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -12,14 +8,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-@DataJpaTest
 @ActiveProfiles("test")
-@Import(value = {UserConfig.class, AccountConfig.class, TransactionConfig.class,
-    CommonConfig.class})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@SpringBootTest
 public class UserRepositoryGatewayTests
 {
   @Autowired
