@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.support.TransactionTemplate;
 
 @Configuration
 public class CommonConfig
@@ -31,11 +29,5 @@ public class CommonConfig
   public Encoder encoder(BCryptPasswordEncoder bCryptPasswordEncoder)
   {
     return new BcryptEncoder(bCryptPasswordEncoder);
-  }
-
-  @Bean
-  public TransactionTemplate transactionTemplate(PlatformTransactionManager transactionManager)
-  {
-    return new TransactionTemplate(transactionManager);
   }
 }
