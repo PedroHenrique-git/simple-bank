@@ -17,8 +17,6 @@ public class AccountRepositoryJpaGateway implements AccountRepositoryGateway
   {
     this.repository = repository;
     this.mapper = mapper;
-
-    this.mapper.setTransactionMapper(transactionMapper);
   }
 
   @Override

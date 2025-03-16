@@ -10,7 +10,6 @@ import com.simplebank.bank.infra.jpa.mappers.AccountEntityMapper;
 import com.simplebank.bank.infra.jpa.mappers.TransactionEntityMapper;
 import com.simplebank.bank.infra.jpa.mappers.UserEntityMapper;
 import com.simplebank.bank.infra.jpa.repositories.AccountRepository;
-import com.simplebank.bank.infra.notification.NotificationSender;
 import com.simplebank.bank.infra.validators.JakartaAccountValidation;
 import com.simplebank.bank.infra.validators.JakartaDepositValidation;
 import com.simplebank.bank.presentation.controllers.ControllerOperation;
@@ -32,6 +31,7 @@ import com.simplebank.bank.usecases.ports.InputValidator;
 import com.simplebank.bank.usecases.ports.TransferAuthService;
 import com.simplebank.bank.usecases.ports.TransferDTORequest;
 import com.simplebank.bank.usecases.ports.TransferDTOResponse;
+import com.simplebank.bank.usecases.ports.TransferNotificationSender;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -144,7 +144,7 @@ public class AccountConfig
   public UseCase<TransferDTORequest, TransferDTOResponse> transfer(
       AccountRepositoryGateway accountRepository,
       TransactionRepositoryGateway transactionRepository, TransferAuthService transferAuthService,
-      NotificationSender notificationSender)
+      TransferNotificationSender notificationSender)
   {
     return new Transfer(accountRepository, transactionRepository, transferAuthService,
         notificationSender);

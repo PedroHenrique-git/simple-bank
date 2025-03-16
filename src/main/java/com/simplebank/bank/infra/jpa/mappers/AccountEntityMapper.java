@@ -4,16 +4,12 @@ import com.simplebank.bank.domain.factories.AccountFactoryMaker;
 import com.simplebank.bank.domain.models.Account.Account;
 import com.simplebank.bank.infra.jpa.entities.AccountEntity;
 import com.simplebank.bank.infra.jpa.factories.AccountEntityFactoryMaker;
-import lombok.Setter;
 
 public class AccountEntityMapper
 {
   private final AccountFactoryMaker accountFactoryMaker;
   private final AccountEntityFactoryMaker accountEntityFactoryMaker;
   private final UserEntityMapper userMapper;
-
-  @Setter
-  private TransactionEntityMapper transactionMapper;
 
   public AccountEntityMapper(UserEntityMapper userMapper, AccountFactoryMaker accountFactoryMaker,
                              AccountEntityFactoryMaker accountEntityFactoryMaker)
@@ -41,10 +37,6 @@ public class AccountEntityMapper
     account.setId(a.getId());
     account.setBalance(a.getBalance());
     account.setUser(userMapper.toModel(a.getUser()));
-    account.setPayerTransactions(
-        a.getPayerTransactions().stream().map(transactionMapper::toModel).toList());
-    account.setPayeeTransactions(
-        a.getPayeeTransactions().stream().map(transactionMapper::toModel).toList());
 
     return account;
   }
@@ -61,10 +53,6 @@ public class AccountEntityMapper
 
     account.setBalance(a.getBalance());
     account.setUser(userMapper.toEntity(a.getUser(), includeId));
-    account.setPayerTransactions(
-        a.getPayerTransactions().stream().map(transactionMapper::toEntity).toList());
-    account.setPayeeTransactions(
-        a.getPayeeTransactions().stream().map(transactionMapper::toEntity).toList());
 
     return account;
   }
