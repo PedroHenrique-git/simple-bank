@@ -13,12 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class CommonConfig
 {
   @Bean
-  public BCryptPasswordEncoder bCryptPasswordEncoder()
-  {
-    return new BCryptPasswordEncoder();
-  }
-
-  @Bean
   public TransferAuthService transferAuthService(
       @Value("${transfer.auth.url}") String transferAuthUrl)
   {
