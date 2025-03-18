@@ -32,7 +32,7 @@ import com.simplebank.bank.usecases.ports.DepositDTORequest;
 import com.simplebank.bank.usecases.ports.DepositDTOResponse;
 import com.simplebank.bank.usecases.ports.Encoder;
 import com.simplebank.bank.usecases.ports.InputValidator;
-import com.simplebank.bank.usecases.ports.TransferAuthService;
+import com.simplebank.bank.services.TransferAuthService;
 import com.simplebank.bank.usecases.ports.TransferDTORequest;
 import com.simplebank.bank.usecases.ports.TransferDTOResponse;
 import com.simplebank.bank.usecases.ports.TransferNotificationSender;

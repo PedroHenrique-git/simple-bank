@@ -9,7 +9,7 @@ import com.simplebank.bank.domain.models.Account.BusinessAccount;
 import com.simplebank.bank.domain.models.Account.ClientAccount;
 import com.simplebank.bank.domain.models.Transaction.Transaction;
 import com.simplebank.bank.usecases.ports.InputValidator;
-import com.simplebank.bank.usecases.ports.TransferAuthService;
+import com.simplebank.bank.services.TransferAuthService;
 import com.simplebank.bank.usecases.ports.TransferDTORequest;
 import com.simplebank.bank.usecases.ports.TransferDTOResponse;
 import com.simplebank.bank.usecases.ports.TransferNotificationDTO;
