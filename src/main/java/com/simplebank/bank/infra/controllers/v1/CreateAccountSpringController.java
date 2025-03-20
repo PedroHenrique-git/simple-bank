@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/accounts")
 public class CreateAccountSpringController extends AbstractSpringController
 {
-  public WebController<CreateAccountDTOResponse, CreateAccountDTORequest> controller;
+  private final WebController<CreateAccountDTOResponse, CreateAccountDTORequest> controller;
 
   public CreateAccountSpringController(
       WebController<CreateAccountDTOResponse, CreateAccountDTORequest> controller)

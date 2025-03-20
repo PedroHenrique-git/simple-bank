@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/accounts/deposit")
 public class DepositSpringController extends AbstractSpringController
 {
-  public WebController<DepositDTOResponse, DepositDTORequest> controller;
+  private final WebController<DepositDTOResponse, DepositDTORequest> controller;
 
   public DepositSpringController(
       WebController<DepositDTOResponse, DepositDTORequest> controller)

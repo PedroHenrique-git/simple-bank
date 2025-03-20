@@ -1,11 +1,19 @@
 package com.simplebank.bank.infra.controllers.v1;
 
-import com.simplebank.bank.infra.jpa.entities.UserEntity;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.simplebank.bank.presentation.controllers.WebController;
 import com.simplebank.bank.presentation.controllers.http.HttpStatus;
-import com.simplebank.bank.security.services.JWTService;
+import com.simplebank.bank.presentation.controllers.ports.HttpRequest;
+import com.simplebank.bank.usecases.ports.AuthLoginDTORequest;
+import com.simplebank.bank.usecases.ports.AuthLoginDTOResponse;
+import com.simplebank.bank.usecases.ports.AuthManager;
+import java.time.Duration;
+import java.util.List;
+import org.springframework.http.HttpCookie;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,33 +21,46 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-public class AuthController
+public class AuthController extends AbstractSpringController
 {
-  private final AuthenticationManager authenticationManager;
-  private final JWTService jwtService;
+  private final WebController<AuthLoginDTOResponse, AuthLoginDTORequest> controller;
+  private final AuthManager authManager;
 
-  public AuthController(AuthenticationManager authenticationManager, JWTService jwtService)
+  public AuthController(
+      WebController<AuthLoginDTOResponse, AuthLoginDTORequest> controller, AuthManager authManager)
   {
-    this.authenticationManager = authenticationManager;
-    this.jwtService = jwtService;
+    super();
+
+    this.controller = controller;
+    this.authManager = authManager;
+  }
+
+  @GetMapping("/authenticated-user")
+  public ResponseEntity<ObjectNode> authenticatedUser()
+  {
+    setBodyData(List.of(), authManager.getAuthenticatedUser());
+
+    return ResponseEntity.status(HttpStatus.SUCCESS.value()).body(body);
   }
 
   @PostMapping("/login")
-  public ResponseEntity<AuthLoginDTOResponse> login(@RequestBody AuthLoginDTORequest dto)
+  public ResponseEntity<ObjectNode> login(@RequestBody AuthLoginDTORequest dto)
   {
-    var emailPassword = new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
-    var auth = this.authenticationManager.authenticate(emailPassword);
+    var response = controller.handle(new HttpRequest<>(dto));
 
-    var token = jwtService.generateToken((UserEntity) auth.getPrincipal());
+    HttpCookie cookie = ResponseCookie.from("session", response.body().refreshToken())
+        .httpOnly(true)
+        .secure(true)
+        .sameSite("Strict")
+        .path("/")
+        .maxAge(Duration.ofDays(7))
+        .build();
 
-    return ResponseEntity.status(HttpStatus.SUCCESS.value()).body(new AuthLoginDTOResponse(token));
-  }
+    body.put("message", response.message());
+    body.put("success", response.success());
+    setBodyData(response.errors(), response.body());
 
-  private record AuthLoginDTORequest(String email, String password)
-  {
-  }
-
-  private record AuthLoginDTOResponse(String token)
-  {
+    return ResponseEntity.status(response.status())
+        .header(HttpHeaders.SET_COOKIE, cookie.toString()).body(body);
   }
 }
