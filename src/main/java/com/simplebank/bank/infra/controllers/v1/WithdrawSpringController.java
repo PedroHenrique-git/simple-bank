@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/accounts/withdraw")
 public class WithdrawSpringController extends AbstractSpringController
 {
-  public WebController<WithdrawDTOResponse, WithdrawDTORequest> controller;
+  private final WebController<WithdrawDTOResponse, WithdrawDTORequest> controller;
 
   public WithdrawSpringController(
       WebController<WithdrawDTOResponse, WithdrawDTORequest> controller)

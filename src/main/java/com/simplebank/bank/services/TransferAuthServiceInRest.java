@@ -1,6 +1,5 @@
-package com.simplebank.bank.infra.auth;
+package com.simplebank.bank.services;
 
-import com.simplebank.bank.usecases.ports.TransferAuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestClient;
 

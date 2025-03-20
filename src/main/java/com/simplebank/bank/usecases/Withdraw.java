@@ -6,6 +6,7 @@ import com.simplebank.bank.domain.exceptions.UseCaseException;
 import com.simplebank.bank.usecases.ports.InputValidator;
 import com.simplebank.bank.usecases.ports.WithdrawDTORequest;
 import com.simplebank.bank.usecases.ports.WithdrawDTOResponse;
+import org.springframework.transaction.annotation.Transactional;
 
 public class Withdraw implements UseCase<WithdrawDTORequest, WithdrawDTOResponse>
 {
@@ -19,6 +20,7 @@ public class Withdraw implements UseCase<WithdrawDTORequest, WithdrawDTOResponse
   }
 
   @Override
+  @Transactional
   public WithdrawDTOResponse execute(WithdrawDTORequest dto) throws UseCaseException
   {
     try

@@ -1,4 +1,4 @@
-package com.simplebank.bank.usecases.ports;
+package com.simplebank.bank.services;
 
 public interface TransferAuthService
 {

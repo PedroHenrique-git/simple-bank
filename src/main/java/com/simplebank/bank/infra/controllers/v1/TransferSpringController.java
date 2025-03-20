@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/transfers")
 public class TransferSpringController extends AbstractSpringController
 {
-  public WebController<TransferDTOResponse, TransferDTORequest> controller;
+  private final WebController<TransferDTOResponse, TransferDTORequest> controller;
 
   public TransferSpringController(
       WebController<TransferDTOResponse, TransferDTORequest> controller)
