@@ -43,14 +43,15 @@ public class SecurityFilter extends OncePerRequestFilter
     var token = recoveryToken(request);
     var payload = jwtService.getPayload(token);
 
-    if (token == null || payload == null)
+    var user = repository.findById(payload.userId()).orElse(null);
+
+    if (token == null || payload == null || user == null)
     {
       sendUnauthorizedResponse(response);
 
       return;
     }
 
-    var user = repository.findByEmail(payload.email());
     var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
     SecurityContextHolder.getContext().setAuthentication(auth);

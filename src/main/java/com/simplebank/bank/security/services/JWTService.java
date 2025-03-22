@@ -4,7 +4,6 @@ import com.simplebank.bank.infra.jpa.entities.UserEntity;
 import java.security.Key;
 import java.time.Instant;
 import java.util.Date;
-import java.util.Map;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class JWTService
 {
-  private final String USER = "user";
+  private final String USER_ID = "userId";
   private final String TYPE = "type";
 
   @Value("${jwt.secret}")
@@ -31,10 +30,6 @@ public class JWTService
   {
     try
     {
-      var uId = user.getId();
-      var uEmail = user.getEmail();
-      var uName = user.getName();
-
       JwtClaims claims = new JwtClaims();
 
       claims.setIssuer(issuer);
@@ -43,8 +38,8 @@ public class JWTService
       claims.setGeneratedJwtId();
       claims.setIssuedAtToNow();
       claims.setNotBeforeMinutesInThePast(2);
-      claims.setSubject(uName);
-      claims.setClaim(USER, Map.of("id", uId.toString(), "email", uEmail, "name", uName));
+      claims.setSubject(user.getName());
+      claims.setClaim(USER_ID, user.getId());
       claims.setClaim(TYPE, type.value());
 
       JsonWebSignature jws = new JsonWebSignature();
@@ -74,14 +69,10 @@ public class JWTService
 
       JwtClaims jwtClaims = jwtConsumer.processToClaims(jwt);
 
-      var user = jwtClaims.getClaimValue(USER, Map.class);
+      var uId = jwtClaims.getClaimValue(USER_ID, Long.class);
+      var tType = jwtClaims.getClaimValue(TYPE, String.class);
 
-      var uId = (String) user.get("id");
-      var uEmail = (String) user.get("email");
-      var uName = (String) user.get("name");
-      var tType = (String) jwtClaims.getClaimValue(TYPE);
-
-      return new Payload(Long.valueOf(uId), uEmail, uName, TokenType.valueOf(tType));
+      return new Payload(uId, TokenType.valueOf(tType));
     } catch (Exception e)
     {
       return null;
@@ -100,7 +91,7 @@ public class JWTService
     return new AesKey(key.getBytes());
   }
 
-  public record Payload(long id, String email, String name, TokenType type)
+  public record Payload(long userId, TokenType type)
   {
   }
 }
