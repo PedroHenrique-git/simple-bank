@@ -1,5 +1,6 @@
 package com.simplebank.bank.presentation.controllers;
 
+import com.simplebank.bank.domain.exceptions.ForbiddenException;
 import com.simplebank.bank.domain.exceptions.UseCaseException;
 import com.simplebank.bank.presentation.controllers.http.HttpStatus;
 import com.simplebank.bank.presentation.controllers.ports.HttpRequest;
@@ -21,7 +22,7 @@ public class CreateAccountOperation
   @Override
   public HttpResponse<CreateAccountDTOResponse> execute(
       HttpRequest<CreateAccountDTORequest> request)
-      throws UseCaseException
+      throws UseCaseException, ForbiddenException
   {
     var account = useCase.execute(request.body());
 

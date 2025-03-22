@@ -1,8 +1,10 @@
 package com.simplebank.bank.usecases;
 
 import com.simplebank.bank.data.gateways.AccountRepositoryGateway;
+import com.simplebank.bank.domain.exceptions.ForbiddenException;
 import com.simplebank.bank.domain.exceptions.InvalidAmountException;
 import com.simplebank.bank.domain.exceptions.UseCaseException;
+import com.simplebank.bank.usecases.ports.AuthManager;
 import com.simplebank.bank.usecases.ports.DepositDTORequest;
 import com.simplebank.bank.usecases.ports.DepositDTOResponse;
 import com.simplebank.bank.usecases.ports.InputValidator;
@@ -13,17 +15,20 @@ public class Deposit implements UseCase<DepositDTORequest, DepositDTOResponse>
 {
   private final AccountRepositoryGateway repository;
   private final InputValidator<DepositDTORequest> validator;
+  private final AuthManager authManager;
 
-  public Deposit(AccountRepositoryGateway repository, InputValidator<DepositDTORequest> validator)
+  public Deposit(AccountRepositoryGateway repository, InputValidator<DepositDTORequest> validator,
+                 AuthManager authManager)
   {
     this.repository = repository;
     this.validator = validator;
+    this.authManager = authManager;
   }
 
   @Override
   @Transactional
   public DepositDTOResponse execute(DepositDTORequest dto)
-      throws UseCaseException
+      throws UseCaseException, ForbiddenException
   {
     try
     {
@@ -40,6 +45,8 @@ public class Deposit implements UseCase<DepositDTORequest, DepositDTOResponse>
       {
         throw new UseCaseException("Invalid deposit input", List.of("Invalid accountId"));
       }
+
+      authManager.isAuthorized(account.getUser().getId());
 
       account.deposit(dto.amount());
 

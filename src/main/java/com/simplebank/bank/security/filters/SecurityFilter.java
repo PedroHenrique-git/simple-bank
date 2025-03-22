@@ -11,12 +11,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@Slf4j
 @Component
 public class SecurityFilter extends OncePerRequestFilter
 {
@@ -33,33 +35,42 @@ public class SecurityFilter extends OncePerRequestFilter
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                   FilterChain filterChain) throws ServletException, IOException
   {
-    if (shouldSkip(request))
+    try
     {
+      if (shouldSkip(request))
+      {
+        filterChain.doFilter(request, response);
+
+        return;
+      }
+
+      var token = recoveryToken(request);
+      var payload = jwtService.getPayload(token);
+      var user = repository.findById(payload.userId()).orElse(null);
+
+      if (user == null)
+      {
+        sendUnauthorizedResponse(response);
+
+        return;
+      }
+
+      var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+
+      SecurityContextHolder.getContext().setAuthentication(auth);
+
       filterChain.doFilter(request, response);
 
-      return;
-    }
-
-    var token = recoveryToken(request);
-    var payload = jwtService.getPayload(token);
-
-    var user = repository.findById(payload.userId()).orElse(null);
-
-    if (token == null || payload == null || user == null)
+    } catch (Exception e)
     {
       sendUnauthorizedResponse(response);
 
-      return;
+      log.info("Security filter error: {}", e.toString());
     }
-
-    var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-
-    SecurityContextHolder.getContext().setAuthentication(auth);
-
-    filterChain.doFilter(request, response);
   }
 
   private String recoveryToken(HttpServletRequest request)
+      throws ServletException, IOException
   {
     var authorization = request.getHeader("Authorization");
 

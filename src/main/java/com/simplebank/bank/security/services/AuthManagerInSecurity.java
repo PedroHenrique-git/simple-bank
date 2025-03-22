@@ -1,5 +1,6 @@
 package com.simplebank.bank.security.services;
 
+import com.simplebank.bank.domain.exceptions.ForbiddenException;
 import com.simplebank.bank.domain.models.User.User;
 import com.simplebank.bank.infra.jpa.entities.UserEntity;
 import com.simplebank.bank.infra.jpa.mappers.UserEntityMapper;
@@ -38,6 +39,19 @@ public class AuthManagerInSecurity implements AuthManager
         jwtService.generateToken((UserEntity) auth.getPrincipal(), TokenType.REFRESH, 24 * 60 * 7);
 
     return new TokenDTO(commonToken, refreshToken);
+  }
+
+  @Override
+  public boolean isAuthorized(long userId) throws ForbiddenException
+  {
+    var authenticatedUser = getAuthenticatedUser();
+
+    if (authenticatedUser.getId() == userId)
+    {
+      return true;
+    }
+
+    throw new ForbiddenException();
   }
 
   @Override

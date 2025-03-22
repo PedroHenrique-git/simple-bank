@@ -20,19 +20,20 @@ import com.simplebank.bank.presentation.controllers.DepositOperation;
 import com.simplebank.bank.presentation.controllers.TransferOperation;
 import com.simplebank.bank.presentation.controllers.WebController;
 import com.simplebank.bank.presentation.controllers.WithdrawOperation;
+import com.simplebank.bank.services.TransferAuthService;
 import com.simplebank.bank.usecases.CreateAccount;
 import com.simplebank.bank.usecases.Deposit;
 import com.simplebank.bank.usecases.Transfer;
 import com.simplebank.bank.usecases.UseCase;
 import com.simplebank.bank.usecases.Withdraw;
 import com.simplebank.bank.usecases.mapper.CreateAccountDTOMapper;
+import com.simplebank.bank.usecases.ports.AuthManager;
 import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
 import com.simplebank.bank.usecases.ports.CreateAccountDTOResponse;
 import com.simplebank.bank.usecases.ports.DepositDTORequest;
 import com.simplebank.bank.usecases.ports.DepositDTOResponse;
 import com.simplebank.bank.usecases.ports.Encoder;
 import com.simplebank.bank.usecases.ports.InputValidator;
-import com.simplebank.bank.services.TransferAuthService;
 import com.simplebank.bank.usecases.ports.TransferDTORequest;
 import com.simplebank.bank.usecases.ports.TransferDTOResponse;
 import com.simplebank.bank.usecases.ports.TransferNotificationSender;
@@ -155,26 +156,29 @@ public class AccountConfig
 
   @Bean
   public UseCase<DepositDTORequest, DepositDTOResponse> deposit(
-      AccountRepositoryGateway accountRepository, InputValidator<DepositDTORequest> validator)
+      AccountRepositoryGateway accountRepository, InputValidator<DepositDTORequest> validator,
+      AuthManager authManager)
   {
-    return new Deposit(accountRepository, validator);
+    return new Deposit(accountRepository, validator, authManager);
   }
 
   @Bean
   public UseCase<TransferDTORequest, TransferDTOResponse> transfer(
       AccountRepositoryGateway accountRepository,
       TransactionRepositoryGateway transactionRepository, TransferAuthService transferAuthService,
-      TransferNotificationSender notificationSender, InputValidator<TransferDTORequest> validator)
+      TransferNotificationSender notificationSender, InputValidator<TransferDTORequest> validator,
+      AuthManager authManager)
   {
     return new Transfer(accountRepository, transactionRepository, transferAuthService,
-        notificationSender, validator);
+        notificationSender, validator, authManager);
   }
 
   @Bean
   public UseCase<WithdrawDTORequest, WithdrawDTOResponse> withdraw(
-      AccountRepositoryGateway accountRepository, InputValidator<WithdrawDTORequest> validator)
+      AccountRepositoryGateway accountRepository, InputValidator<WithdrawDTORequest> validator,
+      AuthManager authManager)
   {
-    return new Withdraw(accountRepository, validator);
+    return new Withdraw(accountRepository, validator, authManager);
   }
 
   @Bean

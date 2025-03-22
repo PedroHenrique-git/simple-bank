@@ -1,5 +1,6 @@
 package com.simplebank.bank.presentation.controllers;
 
+import com.simplebank.bank.domain.exceptions.ForbiddenException;
 import com.simplebank.bank.domain.exceptions.UseCaseException;
 import com.simplebank.bank.presentation.controllers.http.HttpStatus;
 import com.simplebank.bank.presentation.controllers.ports.HttpRequest;
@@ -19,7 +20,7 @@ public class DepositOperation implements ControllerOperation<DepositDTOResponse,
 
   @Override
   public HttpResponse<DepositDTOResponse> execute(HttpRequest<DepositDTORequest> request)
-      throws UseCaseException
+      throws UseCaseException, ForbiddenException
   {
     var response = useCase.execute(request.body());
 

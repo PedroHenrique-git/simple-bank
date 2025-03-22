@@ -3,13 +3,15 @@ package com.simplebank.bank.usecases;
 import com.simplebank.bank.data.gateways.AccountRepositoryGateway;
 import com.simplebank.bank.data.gateways.TransactionRepositoryGateway;
 import com.simplebank.bank.domain.exceptions.AccountWithoutBalanceException;
+import com.simplebank.bank.domain.exceptions.ForbiddenException;
 import com.simplebank.bank.domain.exceptions.InvalidAmountException;
 import com.simplebank.bank.domain.exceptions.UseCaseException;
 import com.simplebank.bank.domain.models.Account.BusinessAccount;
 import com.simplebank.bank.domain.models.Account.ClientAccount;
 import com.simplebank.bank.domain.models.Transaction.Transaction;
-import com.simplebank.bank.usecases.ports.InputValidator;
 import com.simplebank.bank.services.TransferAuthService;
+import com.simplebank.bank.usecases.ports.AuthManager;
+import com.simplebank.bank.usecases.ports.InputValidator;
 import com.simplebank.bank.usecases.ports.TransferDTORequest;
 import com.simplebank.bank.usecases.ports.TransferDTOResponse;
 import com.simplebank.bank.usecases.ports.TransferNotificationDTO;
@@ -23,23 +25,26 @@ public class Transfer implements UseCase<TransferDTORequest, TransferDTOResponse
   private final TransferAuthService transferAuthService;
   private final TransferNotificationSender notificationSender;
   private final InputValidator<TransferDTORequest> validator;
+  private final AuthManager authManager;
 
   public Transfer(AccountRepositoryGateway repository,
                   TransactionRepositoryGateway transactionRepository,
                   TransferAuthService transferAuthService,
                   TransferNotificationSender notificationSender,
-                  InputValidator<TransferDTORequest> validator)
+                  InputValidator<TransferDTORequest> validator, AuthManager authManager)
   {
     this.repository = repository;
     this.transactionRepository = transactionRepository;
     this.transferAuthService = transferAuthService;
     this.notificationSender = notificationSender;
     this.validator = validator;
+    this.authManager = authManager;
   }
 
   @Override
   @Transactional
-  public TransferDTOResponse execute(TransferDTORequest dto) throws UseCaseException
+  public TransferDTOResponse execute(TransferDTORequest dto)
+      throws UseCaseException, ForbiddenException
   {
     try
     {
@@ -61,6 +66,8 @@ public class Transfer implements UseCase<TransferDTORequest, TransferDTOResponse
       {
         throw new UseCaseException("A business user can't make transfers");
       }
+
+      authManager.isAuthorized(rawPayer.getUser().getId());
 
       if (!transferAuthService.authorize())
       {
