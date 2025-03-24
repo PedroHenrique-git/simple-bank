@@ -64,8 +64,6 @@ public class SecurityFilter extends OncePerRequestFilter
     {
       log.info("[SECURITY FILTER ERROR]: {}", e.toString());
 
-      e.printStackTrace();
-
       sendUnauthorizedResponse(response);
     }
   }
