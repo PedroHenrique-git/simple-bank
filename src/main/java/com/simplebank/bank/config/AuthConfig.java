@@ -1,5 +1,6 @@
 package com.simplebank.bank.config;
 
+import com.simplebank.bank.infra.validators.JakartaLoginValidation;
 import com.simplebank.bank.presentation.controllers.AuthenticatedUserOperation;
 import com.simplebank.bank.presentation.controllers.ControllerOperation;
 import com.simplebank.bank.presentation.controllers.LoginOperation;
@@ -12,6 +13,7 @@ import com.simplebank.bank.usecases.ports.AuthAuthenticatedUserDTOResponse;
 import com.simplebank.bank.usecases.ports.AuthLoginDTORequest;
 import com.simplebank.bank.usecases.ports.AuthLoginDTOResponse;
 import com.simplebank.bank.usecases.ports.AuthManager;
+import com.simplebank.bank.usecases.ports.InputValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,9 +21,10 @@ import org.springframework.context.annotation.Configuration;
 public class AuthConfig
 {
   @Bean
-  public UseCase<AuthLoginDTORequest, AuthLoginDTOResponse> login(AuthManager manager)
+  public UseCase<AuthLoginDTORequest, AuthLoginDTOResponse> login(AuthManager manager,
+                                                                  InputValidator<AuthLoginDTORequest> validator)
   {
-    return new Login(manager);
+    return new Login(manager, validator);
   }
 
   @Bean
@@ -57,5 +60,11 @@ public class AuthConfig
       ControllerOperation<AuthAuthenticatedUserDTOResponse, AuthAuthenticatedUserDTORequest> operation)
   {
     return new WebController<>(operation);
+  }
+
+  @Bean
+  public InputValidator<AuthLoginDTORequest> loginValidator()
+  {
+    return new JakartaLoginValidation();
   }
 }

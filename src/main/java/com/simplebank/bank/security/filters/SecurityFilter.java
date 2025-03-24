@@ -60,12 +60,13 @@ public class SecurityFilter extends OncePerRequestFilter
       SecurityContextHolder.getContext().setAuthentication(auth);
 
       filterChain.doFilter(request, response);
-
     } catch (Exception e)
     {
-      sendUnauthorizedResponse(response);
+      log.info("[SECURITY FILTER ERROR]: {}", e.toString());
 
-      log.info("Security filter error: {}", e.toString());
+      e.printStackTrace();
+
+      sendUnauthorizedResponse(response);
     }
   }
 

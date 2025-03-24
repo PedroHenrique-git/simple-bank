@@ -5,7 +5,9 @@ import com.simplebank.bank.domain.exceptions.UseCaseException;
 import com.simplebank.bank.presentation.controllers.http.HttpStatus;
 import com.simplebank.bank.presentation.controllers.ports.HttpRequest;
 import com.simplebank.bank.presentation.controllers.ports.HttpResponse;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class WebController<T, R>
 {
   private final ControllerOperation<T, R> operation;
@@ -30,6 +32,8 @@ public class WebController<T, R>
           e.getErrors());
     } catch (Exception e)
     {
+      log.error("[WEB CONTROLLER ERROR]: {}", e.toString());
+
       return new HttpResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), false,
           "Something went wrong, try again later", null);
     }

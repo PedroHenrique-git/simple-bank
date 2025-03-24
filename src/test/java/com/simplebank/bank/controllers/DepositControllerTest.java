@@ -1,7 +1,9 @@
 package com.simplebank.bank.controllers;
 
+import com.simplebank.bank.domain.exceptions.ForbiddenException;
 import com.simplebank.bank.presentation.controllers.WebController;
 import com.simplebank.bank.presentation.controllers.ports.HttpRequest;
+import com.simplebank.bank.usecases.ports.AuthManager;
 import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
 import com.simplebank.bank.usecases.ports.CreateAccountDTOResponse;
 import com.simplebank.bank.usecases.ports.DepositDTORequest;
@@ -11,10 +13,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -26,8 +32,17 @@ public class DepositControllerTest
   @Autowired
   public WebController<DepositDTOResponse, DepositDTORequest> controller;
 
+  @MockitoBean
+  AuthManager authManager;
+
+  @BeforeEach
+  void setup() throws ForbiddenException
+  {
+    when(authManager.isAuthorized(anyLong())).thenReturn(true);
+  }
+
   @Test
-  void testDepositController()
+  void testDepositController() throws ForbiddenException
   {
     var account = accountController.handle(new HttpRequest<>(
         new CreateAccountDTORequest("pedro", "p2@email.com", "AA!45aaa", "222.222.222-22")));

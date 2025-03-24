@@ -34,17 +34,25 @@ public class LoginController extends AbstractSpringController
   {
     var response = controller.handle(new HttpRequest<>(dto));
 
-    HttpCookie cookie = ResponseCookie.from("session", response.body().refreshToken())
+    var responseBody = response.body();
+    var responseErrors = response.errors();
+
+    body.put("message", response.message());
+    body.put("success", response.success());
+    setBodyData(responseErrors, responseBody);
+
+    if (!responseErrors.isEmpty() || responseBody == null)
+    {
+      return ResponseEntity.status(response.status()).body(body);
+    }
+
+    HttpCookie cookie = ResponseCookie.from("session", responseBody.refreshToken())
         .httpOnly(true)
         .secure(true)
         .sameSite("Strict")
         .path("/")
         .maxAge(Duration.ofDays(7))
         .build();
-
-    body.put("message", response.message());
-    body.put("success", response.success());
-    setBodyData(response.errors(), response.body());
 
     return ResponseEntity.status(response.status())
         .header(HttpHeaders.SET_COOKIE, cookie.toString()).body(body);
