@@ -21,11 +21,13 @@ import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @Import(value = {UserConfig.class, AccountConfig.class, TransactionConfig.class,
     CommonConfig.class})
 public class WithdrawUseCaseTest
@@ -48,7 +50,7 @@ public class WithdrawUseCaseTest
     when(authManager.isAuthorized(anyLong())).thenReturn(true);
 
     var account = createAccountUseCase.execute(
-        new CreateAccountDTORequest("Pedro", "p3@email.com", "AA!45aaa", "444.444.444-44"));
+        new CreateAccountDTORequest("Pedro", "p50@email.com", "AA!45aaa", "329.959.880-58"));
 
     assertThrows(UseCaseException.class,
         () -> withdrawUsecase.execute(new WithdrawDTORequest(-1L, 0.0)));
@@ -69,7 +71,7 @@ public class WithdrawUseCaseTest
     when(authManager.isAuthorized(anyLong())).thenThrow(new ForbiddenException());
 
     var account = createAccountUseCase.execute(
-        new CreateAccountDTORequest("Pedro", "p3@email.com", "AA!45aaa", "444.444.444-44"));
+        new CreateAccountDTORequest("Pedro", "p51@email.com", "AA!45aaa", "329.959.880-58"));
 
     assertThrows(ForbiddenException.class,
         () -> withdrawUsecase.execute(new WithdrawDTORequest(account.accountId(), 100.0)));
