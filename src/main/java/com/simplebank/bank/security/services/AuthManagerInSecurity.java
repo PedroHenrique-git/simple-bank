@@ -44,7 +44,7 @@ public class AuthManagerInSecurity implements AuthManager
           .generateToken((UserEntity) auth.getPrincipal(), TokenType.REFRESH,
               24 * 60 * 7);
 
-      return new TokenDTO(commonToken, commonToken);
+      return new TokenDTO(commonToken, refreshToken);
     } catch (Exception e)
     {
       log.error("[AUTH MANAGER ERROR]: {}", e.toString());
