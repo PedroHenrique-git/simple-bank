@@ -11,6 +11,8 @@ import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
 import com.simplebank.bank.usecases.ports.CreateAccountDTOResponse;
 import com.simplebank.bank.usecases.ports.DepositDTORequest;
 import com.simplebank.bank.usecases.ports.DepositDTOResponse;
+import com.simplebank.bank.usecases.ports.WithdrawDTORequest;
+import com.simplebank.bank.usecases.ports.WithdrawDTOResponse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
@@ -19,19 +21,20 @@ import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @Import(value = {UserConfig.class, AccountConfig.class, TransactionConfig.class,
     CommonConfig.class})
-public class DepositUseCaseTest
+public class WithdrawUseCaseTest
 {
   @Autowired
-  public UseCase<DepositDTORequest, DepositDTOResponse> usecase;
+  public UseCase<WithdrawDTORequest, WithdrawDTOResponse> withdrawUsecase;
+
+  @Autowired
+  public UseCase<DepositDTORequest, DepositDTOResponse> depositUsecase;
 
   @Autowired
   public UseCase<CreateAccountDTORequest, CreateAccountDTOResponse> createAccountUseCase;
@@ -40,7 +43,7 @@ public class DepositUseCaseTest
   AuthManager authManager;
 
   @Test
-  void testDepositUseCase() throws UseCaseException, ForbiddenException
+  void testWithdrawUseCase() throws UseCaseException, ForbiddenException
   {
     when(authManager.isAuthorized(anyLong())).thenReturn(true);
 
@@ -48,13 +51,16 @@ public class DepositUseCaseTest
         new CreateAccountDTORequest("Pedro", "p3@email.com", "AA!45aaa", "444.444.444-44"));
 
     assertThrows(UseCaseException.class,
-        () -> usecase.execute(new DepositDTORequest(-1L, 0.0)));
+        () -> withdrawUsecase.execute(new WithdrawDTORequest(-1L, 0.0)));
     assertThrows(UseCaseException.class,
-        () -> usecase.execute(new DepositDTORequest(account.accountId(), 0.0)));
+        () -> withdrawUsecase.execute(new WithdrawDTORequest(account.accountId(), 0.0)));
 
-    var updatedAccount = usecase.execute(new DepositDTORequest(account.accountId(), 100.0));
+    depositUsecase.execute(new DepositDTORequest(account.accountId(), 200.0));
 
-    assertEquals(100, updatedAccount.balance());
+    var updatedAccount =
+        withdrawUsecase.execute(new WithdrawDTORequest(account.accountId(), 150.0));
+
+    assertEquals(50.0, updatedAccount.balance());
   }
 
   @Test
@@ -66,6 +72,6 @@ public class DepositUseCaseTest
         new CreateAccountDTORequest("Pedro", "p3@email.com", "AA!45aaa", "444.444.444-44"));
 
     assertThrows(ForbiddenException.class,
-        () -> usecase.execute(new DepositDTORequest(account.accountId(), 100.0)));
+        () -> withdrawUsecase.execute(new WithdrawDTORequest(account.accountId(), 100.0)));
   }
 }
