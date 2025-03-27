@@ -1,9 +1,9 @@
 package com.simplebank.bank.config;
 
-import com.simplebank.bank.services.TransferAuthServiceInRest;
 import com.simplebank.bank.infra.encoders.BcryptEncoder;
-import com.simplebank.bank.usecases.ports.Encoder;
 import com.simplebank.bank.services.TransferAuthService;
+import com.simplebank.bank.services.TransferAuthServiceInRest;
+import com.simplebank.bank.usecases.ports.Encoder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
