@@ -91,7 +91,7 @@ public abstract class Account
 
   public double deposit(Double amount) throws InvalidAmountException
   {
-    if (amount <= 0)
+    if (amount <= 0.0)
     {
       throw new InvalidAmountException("The amount must be a positive value greater than zero");
     }
