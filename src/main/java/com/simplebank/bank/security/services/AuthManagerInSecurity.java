@@ -39,7 +39,7 @@ public class AuthManagerInSecurity implements AuthManager
       var auth = this.authenticationManager.authenticate(emailPassword);
 
       var commonToken =
-          jwtService.generateToken((UserEntity) auth.getPrincipal(), TokenType.COMMON, 60);
+          jwtService.generateToken((UserEntity) auth.getPrincipal(), TokenType.AUTH, 60);
       var refreshToken = jwtService
           .generateToken((UserEntity) auth.getPrincipal(), TokenType.REFRESH,
               24 * 60 * 7);

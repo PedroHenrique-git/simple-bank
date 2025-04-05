@@ -2,7 +2,7 @@ package com.simplebank.bank.security.services;
 
 public enum TokenType
 {
-  COMMON("COMMON"),
+  AUTH("AUTH"),
   REFRESH("REFRESH");
 
   private final String value;

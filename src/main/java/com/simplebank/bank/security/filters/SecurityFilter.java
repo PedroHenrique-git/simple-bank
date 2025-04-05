@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simplebank.bank.infra.jpa.repositories.UserRepository;
 import com.simplebank.bank.presentation.controllers.http.HttpStatus;
 import com.simplebank.bank.security.services.JWTService;
+import com.simplebank.bank.security.services.TokenType;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,7 +50,7 @@ public class SecurityFilter extends OncePerRequestFilter
       var payload = jwtService.getPayload(token);
       var user = repository.findById(payload.userId()).orElse(null);
 
-      if (user == null)
+      if (user == null || Objects.equals(payload.type().value(), TokenType.REFRESH.value()))
       {
         sendUnauthorizedResponse(response);
 
