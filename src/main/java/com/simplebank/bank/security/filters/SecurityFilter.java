@@ -99,6 +99,7 @@ public class SecurityFilter extends OncePerRequestFilter
     var uri = request.getRequestURI();
     var method = request.getMethod();
 
-    return List.of("/api/v1/accounts", "/api/v1/auth/login").contains(uri) && method.equals("POST");
+    return List.of("/api/v1/accounts", "/api/v1/auth/login", "/api/v1/auth/logout").contains(uri) &&
+        List.of("POST", "GET").contains(method);
   }
 }

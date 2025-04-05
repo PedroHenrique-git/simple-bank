@@ -73,4 +73,12 @@ public class AuthManagerInSecurity implements AuthManager
 
     return mapper.toModel((UserEntity) userEntity);
   }
+
+  @Override
+  public boolean logout()
+  {
+    SecurityContextHolder.clearContext();
+
+    return true;
+  }
 }

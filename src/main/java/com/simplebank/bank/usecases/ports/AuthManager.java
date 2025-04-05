@@ -11,4 +11,6 @@ public interface AuthManager
   User getAuthenticatedUser();
 
   boolean isAuthorized(long userId) throws ForbiddenException;
+
+  boolean logout();
 }
