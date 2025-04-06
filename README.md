@@ -15,11 +15,12 @@ simple bank is an application that simulates the basic functionality of a bank
 
 ### Api docs
 
-### **Create account**
+#### **Create account**
 
 **Path:** /api/v1/accounts <br />
 **Method:** POST <br />
-**Requires authentication:** False
+**Requires authentication:** False <br />
+**Description:** Endpoint to create a new account, returns the created account and user
 
 obs: for simplicity purposes, i only validated the document format
 
@@ -49,11 +50,12 @@ obs: for simplicity purposes, i only validated the document format
     }
 ```
 
-### **Deposit**
+#### **Deposit**
 
 **Path:** /api/v1/accounts/deposit <br />
 **Method:** POST <br />
-**Requires authentication:** True
+**Requires authentication:** True <br />
+**Description:** Endpoint for depositing an amount into an account, returns the new account balance
 
 **Body example:**
 
@@ -76,11 +78,12 @@ obs: for simplicity purposes, i only validated the document format
     }
 ```
 
-### **Withdraw**
+#### **Withdraw**
 
 **Path:** /api/v1/accounts/withdraw <br />
 **Method:** POST <br />
-**Requires authentication:** True
+**Requires authentication:** True <br />
+**Description:** Endpoint for withdrawing an amount from an account, returns the new account balance
 
 **Body example:**
 
@@ -103,11 +106,12 @@ obs: for simplicity purposes, i only validated the document format
     }
 ```
 
-### **Transfer**
+#### **Transfer**
 
 **Path:** /api/v1/transfers <br />
 **Method:** POST <br />
-**Requires authentication:** True
+**Requires authentication:** True <br />
+**Description:** Endpoint to transfer an amount between accounts, returns the new account balance
 
 **Body example:**
 
@@ -131,11 +135,12 @@ obs: for simplicity purposes, i only validated the document format
     }
 ```
 
-### **Login**
+#### **Login**
 
 **Path:** /api/v1/auth/login <br />
 **Method:** POST <br />
-**Requires authentication:** False
+**Requires authentication:** False <br />
+**Description:** Endpoint to login into the system,  returns the auth and refresh token
 
 **Body example:**
 
@@ -159,3 +164,61 @@ obs: for simplicity purposes, i only validated the document format
     }
 ```
 
+#### **Logout**
+
+**Path:** /api/v1/auth/logout <br />
+**Method:** GET <br />
+**Requires authentication:** False <br />
+**Description:** Endpoint for system logout, returns the redirect url and deletes the refreshToken cookie
+
+**Success response example:**
+
+```
+    {
+        "message": "You have been logged out successfully.",
+        "success": true,
+        "data": {
+            "redirectUrl": "/login"
+        }
+    }
+```
+
+#### **Refresh token**
+
+**Path:** /api/v1/auth/refresh-token <br />
+**Method:** GET <br />
+**Requires authentication:** False <br />
+**Description:** Endpoint to get a new authToken, based on the refreshToken cookie
+
+**Success response example:**
+
+```
+    {
+        "message": "Token updated successfully",
+        "success": true,
+        "data": {
+            "authToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiYW5rIiwiYXVkIjoiY2xpZW50IiwiZXhwIjoxNzQzOTc0ODU3LCJqdGkiOiJVV2ZOZmpBa1BiM09ySEVYZU9uQW53IiwiaWF0IjoxNzQzOTcxMjU3LCJuYmYiOjE3NDM5NzExMzcsInN1YiI6InBlZHJvIiwidXNlcklkIjoyMDYsInR5cGUiOiJBVVRIIn0.IzVpm0ch-UteEMn8CEUkB-SMFE93W4ublIYm6arKLBQ"
+        }
+    }
+```
+
+#### **Authenticated user**
+
+**Path:** /api/v1/auth/authenticated-user <br />
+**Method:** GET <br />
+**Requires authentication:** True <br />
+**Description:** Endpoint to get authenticated user data
+
+**Success response example:**
+
+```
+   {
+        "message": "authenticated user data successfully obtained",
+        "success": true,
+        "data": {
+            "id": 206,
+            "name": "pedro",
+            "email": "pedro209@email.com"
+        }
+    }
+```
