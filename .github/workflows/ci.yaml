@@ -35,9 +35,3 @@ jobs:
 
     - name: Run tests
       run: mvn test
-      
-    - name: Upload test results to GitHub
-      uses: actions/upload-artifact@v4
-      with:
-        name: test-results
-        path: target/test-*.xml
