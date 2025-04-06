@@ -1,6 +1,7 @@
 package com.simplebank.bank.controllers;
 
 import com.simplebank.bank.domain.exceptions.ForbiddenException;
+import com.simplebank.bank.domain.exceptions.UnauthorizedException;
 import com.simplebank.bank.domain.exceptions.UseCaseException;
 import com.simplebank.bank.presentation.controllers.WebController;
 import com.simplebank.bank.presentation.controllers.ports.HttpRequest;
@@ -57,7 +58,7 @@ public class TransferController
   TransferNotificationSender transferNotificationSender;
 
   @Test
-  void testTransferController() throws ForbiddenException, UseCaseException
+  void testTransferController() throws ForbiddenException, UseCaseException, UnauthorizedException
   {
     var acOne = createAccountUsecase.execute(
         new CreateAccountDTORequest("pedro", "p@email.com", "AA!45aaa", "610.425.140-78"));

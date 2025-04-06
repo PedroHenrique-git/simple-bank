@@ -4,9 +4,11 @@ import com.simplebank.bank.domain.Constants;
 import com.simplebank.bank.domain.exceptions.ForbiddenException;
 import com.simplebank.bank.domain.exceptions.InvalidCredentialsException;
 import com.simplebank.bank.domain.exceptions.InvalidToken;
+import com.simplebank.bank.domain.exceptions.UnauthorizedException;
 import com.simplebank.bank.domain.models.User.User;
 import com.simplebank.bank.infra.jpa.entities.UserEntity;
 import com.simplebank.bank.infra.jpa.mappers.UserEntityMapper;
+import com.simplebank.bank.infra.jpa.repositories.UserRepository;
 import com.simplebank.bank.usecases.ports.AuthLoginDTORequest;
 import com.simplebank.bank.usecases.ports.AuthManager;
 import com.simplebank.bank.usecases.ports.RefreshAuthDTORequest;
@@ -26,13 +28,15 @@ public class AuthManagerInSecurity implements AuthManager
   private final AuthenticationManager authenticationManager;
   private final JWTService jwtService;
   private final UserEntityMapper mapper;
+  private final UserRepository repository;
 
   public AuthManagerInSecurity(AuthenticationManager authenticationManager, UserEntityMapper mapper,
-                               JWTService jwtService)
+                               JWTService jwtService, UserRepository repository)
   {
     this.authenticationManager = authenticationManager;
     this.mapper = mapper;
     this.jwtService = jwtService;
+    this.repository = repository;
   }
 
   @Override
@@ -91,26 +95,22 @@ public class AuthManagerInSecurity implements AuthManager
 
   @Override
   public RefreshAuthDTOResponse refreshAuthentication(RefreshAuthDTORequest dto)
-      throws InvalidToken, ForbiddenException
+      throws InvalidToken, UnauthorizedException
   {
     var payload = jwtService.getPayload(dto.refreshToken())
-        .orElseThrow(() -> new InvalidToken("Invalid refresh token"));
+        .orElseThrow(() -> new UnauthorizedException("Unauthorized"));
 
     if (Objects.equals(payload.type().value(), TokenType.AUTH.value()))
     {
       throw new InvalidToken("Invalid refresh token");
     }
 
-    var userEntity =
-        (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-    if (payload.userId() != userEntity.getId())
-    {
-      throw new ForbiddenException("You can not perform this operation");
-    }
+    var userEntity = repository.findById(payload.userId())
+        .orElseThrow(() -> new UnauthorizedException("Unauthorized"));
 
     var authToken =
-        jwtService.generateToken(userEntity, TokenType.AUTH, 60).orElseThrow();
+        jwtService.generateToken(userEntity, TokenType.AUTH, Constants.AUTH_TOKEN_EXPIRATION)
+            .orElseThrow();
 
     return new RefreshAuthDTOResponse(authToken);
   }

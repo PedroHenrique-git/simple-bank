@@ -1,6 +1,7 @@
 package com.simplebank.bank.controllers;
 
 import com.simplebank.bank.domain.exceptions.ForbiddenException;
+import com.simplebank.bank.domain.exceptions.UnauthorizedException;
 import com.simplebank.bank.domain.exceptions.UseCaseException;
 import com.simplebank.bank.presentation.controllers.WebController;
 import com.simplebank.bank.presentation.controllers.ports.HttpRequest;
@@ -31,7 +32,7 @@ public class LoginController
   public UseCase<CreateAccountDTORequest, CreateAccountDTOResponse> createAccountUsecase;
 
   @Test
-  void testLoginController() throws ForbiddenException, UseCaseException
+  void testLoginController() throws ForbiddenException, UseCaseException, UnauthorizedException
   {
     var responseWithError =
         controller.handle(new HttpRequest<>(new AuthLoginDTORequest("mock", "1")));

@@ -11,6 +11,8 @@ import com.simplebank.bank.usecases.ports.AuthLoginDTORequest;
 import com.simplebank.bank.usecases.ports.AuthLoginDTOResponse;
 import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
 import com.simplebank.bank.usecases.ports.CreateAccountDTOResponse;
+import com.simplebank.bank.usecases.ports.RefreshAuthDTORequest;
+import com.simplebank.bank.usecases.ports.RefreshAuthDTOResponse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
@@ -25,31 +27,31 @@ import org.springframework.test.context.ActiveProfiles;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @Import(value = {UserConfig.class, AccountConfig.class, TransactionConfig.class,
     CommonConfig.class})
-public class LoginUseCaseTest
+public class RefreshTokenUseCaseTest
 {
   @Autowired
-  public UseCase<AuthLoginDTORequest, AuthLoginDTOResponse> loginUsecase;
+  public UseCase<RefreshAuthDTORequest, RefreshAuthDTOResponse> usecase;
 
   @Autowired
-  public UseCase<CreateAccountDTORequest, CreateAccountDTOResponse> createAccountUsecase;
+  public UseCase<CreateAccountDTORequest, CreateAccountDTOResponse> createAccountUseCase;
+
+  @Autowired
+  public UseCase<AuthLoginDTORequest, AuthLoginDTOResponse> loginUseCase;
 
   @Test
-  void testLoginUseCase() throws ForbiddenException, UnauthorizedException, UseCaseException
+  void testRefreshTokenUseCase() throws ForbiddenException, UnauthorizedException, UseCaseException
   {
-    var ac = createAccountUsecase.execute(
-        new CreateAccountDTORequest("Pedro", "p50@email.com", "AA!45aaa", "329.959.880-60"));
+    createAccountUseCase.execute(
+        new CreateAccountDTORequest("pedro", "p800@gmail.com", "AA!45aaa", "406.260.930-40"));
 
-    assertThrows(UseCaseException.class,
-        () -> loginUsecase.execute(new AuthLoginDTORequest(null, null)));
-    assertThrows(UseCaseException.class,
-        () -> loginUsecase.execute(new AuthLoginDTORequest("p50@email.comABC", "1214")));
-    assertThrows(UseCaseException.class,
-        () -> loginUsecase.execute(new AuthLoginDTORequest("p50@email.com", "1214")));
+    var login = loginUseCase.execute(new AuthLoginDTORequest("p800@gmail.com", "AA!45aaa"));
 
-    var loginResult = loginUsecase.execute(new AuthLoginDTORequest("p50@email.com", "AA!45aaa"));
+    assertThrows(UnauthorizedException.class, () -> usecase.execute(new RefreshAuthDTORequest("")));
+    assertThrows(UseCaseException.class,
+        () -> usecase.execute(new RefreshAuthDTORequest(login.authToken())));
 
-    assertInstanceOf(AuthLoginDTOResponse.class, loginResult);
-    assertInstanceOf(String.class, loginResult.authToken());
-    assertInstanceOf(String.class, loginResult.refreshToken());
+    var response = usecase.execute(new RefreshAuthDTORequest(login.refreshToken()));
+
+    assertInstanceOf(String.class, response.authToken());
   }
 }

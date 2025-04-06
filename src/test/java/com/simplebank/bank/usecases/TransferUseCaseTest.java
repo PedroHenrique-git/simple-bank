@@ -5,6 +5,7 @@ import com.simplebank.bank.config.CommonConfig;
 import com.simplebank.bank.config.TransactionConfig;
 import com.simplebank.bank.config.UserConfig;
 import com.simplebank.bank.domain.exceptions.ForbiddenException;
+import com.simplebank.bank.domain.exceptions.UnauthorizedException;
 import com.simplebank.bank.domain.exceptions.UseCaseException;
 import com.simplebank.bank.services.TransferAuthService;
 import com.simplebank.bank.usecases.ports.AuthManager;
@@ -58,7 +59,7 @@ public class TransferUseCaseTest
   TransferNotificationSender transferNotificationSender;
 
   @Test
-  void testTransferUseCase() throws ForbiddenException, UseCaseException
+  void testTransferUseCase() throws ForbiddenException, UnauthorizedException, UseCaseException
   {
     when(authManager.isAuthorized(anyLong())).thenReturn(true);
     when(authService.authorize()).thenReturn(true);
@@ -89,7 +90,8 @@ public class TransferUseCaseTest
   }
 
   @Test
-  void testTransferAuthorization() throws ForbiddenException, UseCaseException
+  void testTransferAuthorization()
+      throws ForbiddenException, UnauthorizedException, UseCaseException
   {
     when(authManager.isAuthorized(anyLong())).thenReturn(false);
     when(authService.authorize()).thenReturn(false);

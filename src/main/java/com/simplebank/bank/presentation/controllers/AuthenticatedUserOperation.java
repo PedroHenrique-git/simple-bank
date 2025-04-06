@@ -1,6 +1,7 @@
 package com.simplebank.bank.presentation.controllers;
 
 import com.simplebank.bank.domain.exceptions.ForbiddenException;
+import com.simplebank.bank.domain.exceptions.UnauthorizedException;
 import com.simplebank.bank.domain.exceptions.UseCaseException;
 import com.simplebank.bank.presentation.controllers.http.HttpStatus;
 import com.simplebank.bank.presentation.controllers.ports.HttpRequest;
@@ -24,7 +25,7 @@ public class AuthenticatedUserOperation
   @Override
   public HttpResponse<AuthAuthenticatedUserDTOResponse> execute(
       HttpRequest<AuthAuthenticatedUserDTORequest> request)
-      throws UseCaseException, ForbiddenException
+      throws UseCaseException, UnauthorizedException, ForbiddenException
   {
     var response = usecase.execute(request.body());
 

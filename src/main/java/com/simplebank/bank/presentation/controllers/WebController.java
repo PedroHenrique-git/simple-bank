@@ -1,6 +1,7 @@
 package com.simplebank.bank.presentation.controllers;
 
 import com.simplebank.bank.domain.exceptions.ForbiddenException;
+import com.simplebank.bank.domain.exceptions.UnauthorizedException;
 import com.simplebank.bank.domain.exceptions.UseCaseException;
 import com.simplebank.bank.presentation.controllers.http.HttpStatus;
 import com.simplebank.bank.presentation.controllers.ports.HttpRequest;
@@ -22,6 +23,10 @@ public class WebController<T, R>
     try
     {
       return operation.execute(request);
+    } catch (UnauthorizedException e)
+    {
+      return new HttpResponse<>(HttpStatus.UNAUTHORIZED.value(), false,
+          e.getMessage(), null);
     } catch (ForbiddenException e)
     {
       return new HttpResponse<>(HttpStatus.FORBIDDEN.value(), false,

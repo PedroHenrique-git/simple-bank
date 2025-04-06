@@ -5,6 +5,7 @@ import com.simplebank.bank.config.CommonConfig;
 import com.simplebank.bank.config.TransactionConfig;
 import com.simplebank.bank.config.UserConfig;
 import com.simplebank.bank.domain.exceptions.ForbiddenException;
+import com.simplebank.bank.domain.exceptions.UnauthorizedException;
 import com.simplebank.bank.domain.exceptions.UseCaseException;
 import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
 import com.simplebank.bank.usecases.ports.CreateAccountDTOResponse;
@@ -27,7 +28,7 @@ public class CreateAccountUseCaseTest
   public UseCase<CreateAccountDTORequest, CreateAccountDTOResponse> usecase;
 
   @Test
-  void testCreateAccountUseCase() throws UseCaseException, ForbiddenException
+  void testCreateAccountUseCase() throws UseCaseException, UnauthorizedException, ForbiddenException
   {
     assertThrows(UseCaseException.class,
         () -> usecase.execute(new CreateAccountDTORequest("", "", "", "")));

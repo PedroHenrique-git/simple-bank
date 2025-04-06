@@ -1,6 +1,7 @@
 package com.simplebank.bank.controllers;
 
 import com.simplebank.bank.domain.exceptions.ForbiddenException;
+import com.simplebank.bank.domain.exceptions.UnauthorizedException;
 import com.simplebank.bank.domain.exceptions.UseCaseException;
 import com.simplebank.bank.presentation.controllers.WebController;
 import com.simplebank.bank.presentation.controllers.ports.HttpRequest;
@@ -50,7 +51,7 @@ public class WithdrawControllerTest
   }
 
   @Test
-  void testWithdrawController() throws ForbiddenException, UseCaseException
+  void testWithdrawController() throws ForbiddenException, UseCaseException, UnauthorizedException
   {
     var account = accountController.handle(new HttpRequest<>(
         new CreateAccountDTORequest("pedro", "p2@email.com", "AA!45aaa", "222.222.222-22")));

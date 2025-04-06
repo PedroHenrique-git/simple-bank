@@ -5,6 +5,7 @@ import com.simplebank.bank.config.CommonConfig;
 import com.simplebank.bank.config.TransactionConfig;
 import com.simplebank.bank.config.UserConfig;
 import com.simplebank.bank.domain.exceptions.ForbiddenException;
+import com.simplebank.bank.domain.exceptions.UnauthorizedException;
 import com.simplebank.bank.domain.exceptions.UseCaseException;
 import com.simplebank.bank.usecases.ports.AuthManager;
 import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
@@ -40,7 +41,7 @@ public class DepositUseCaseTest
   AuthManager authManager;
 
   @Test
-  void testDepositUseCase() throws UseCaseException, ForbiddenException
+  void testDepositUseCase() throws UseCaseException, UnauthorizedException, ForbiddenException
   {
     when(authManager.isAuthorized(anyLong())).thenReturn(true);
 
@@ -58,7 +59,7 @@ public class DepositUseCaseTest
   }
 
   @Test
-  void testDepositAuthorization() throws ForbiddenException, UseCaseException
+  void testDepositAuthorization() throws ForbiddenException, UnauthorizedException, UseCaseException
   {
     when(authManager.isAuthorized(anyLong())).thenThrow(new ForbiddenException());
 

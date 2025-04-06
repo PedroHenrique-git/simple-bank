@@ -1,6 +1,7 @@
 package com.simplebank.bank.presentation.controllers;
 
 import com.simplebank.bank.domain.exceptions.ForbiddenException;
+import com.simplebank.bank.domain.exceptions.UnauthorizedException;
 import com.simplebank.bank.domain.exceptions.UseCaseException;
 import com.simplebank.bank.presentation.controllers.http.HttpStatus;
 import com.simplebank.bank.presentation.controllers.ports.HttpRequest;
@@ -21,7 +22,7 @@ public class RefreshTokenOperation
 
   @Override
   public HttpResponse<RefreshAuthDTOResponse> execute(HttpRequest<RefreshAuthDTORequest> request)
-      throws ForbiddenException, UseCaseException
+      throws ForbiddenException, UseCaseException, UnauthorizedException
   {
     var response = usecase.execute(request.body());
 

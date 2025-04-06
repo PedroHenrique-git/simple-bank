@@ -7,41 +7,31 @@ import com.simplebank.bank.config.UserConfig;
 import com.simplebank.bank.domain.exceptions.ForbiddenException;
 import com.simplebank.bank.domain.exceptions.UnauthorizedException;
 import com.simplebank.bank.domain.exceptions.UseCaseException;
-import com.simplebank.bank.mocks.UserMock;
-import com.simplebank.bank.usecases.ports.AuthAuthenticatedUserDTORequest;
-import com.simplebank.bank.usecases.ports.AuthAuthenticatedUserDTOResponse;
-import com.simplebank.bank.usecases.ports.AuthManager;
+import com.simplebank.bank.usecases.ports.AuthLogoutDTORequest;
+import com.simplebank.bank.usecases.ports.AuthLogoutDTOResponse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
-import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @Import(value = {UserConfig.class, AccountConfig.class, TransactionConfig.class,
     CommonConfig.class})
-public class AuthenticatedUserUseCaseTest
+public class LogoutUseCaseTest
 {
   @Autowired
-  public UseCase<AuthAuthenticatedUserDTORequest, AuthAuthenticatedUserDTOResponse> usecase;
-
-  @MockitoBean
-  AuthManager authManager;
+  public UseCase<AuthLogoutDTORequest, AuthLogoutDTOResponse> logoutUsecase;
 
   @Test
-  void testAuthenticatedUser() throws ForbiddenException, UnauthorizedException, UseCaseException
+  void testLogoutUseCase() throws ForbiddenException, UnauthorizedException, UseCaseException
   {
-    when(authManager.getAuthenticatedUser()).thenReturn(UserMock.createClientUser());
+    var result = logoutUsecase.execute(new AuthLogoutDTORequest());
 
-    var authenticatedUser = usecase.execute(new AuthAuthenticatedUserDTORequest());
-
-    assertEquals("test-user@email.com", authenticatedUser.email());
-    assertEquals("test", authenticatedUser.name());
+    assertEquals("/login", result.redirectUrl());
   }
 }
