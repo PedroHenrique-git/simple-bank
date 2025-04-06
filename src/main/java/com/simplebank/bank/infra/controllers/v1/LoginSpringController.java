@@ -1,6 +1,7 @@
 package com.simplebank.bank.infra.controllers.v1;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.simplebank.bank.domain.Constants;
 import com.simplebank.bank.presentation.controllers.WebController;
 import com.simplebank.bank.presentation.controllers.ports.HttpRequest;
 import com.simplebank.bank.usecases.ports.AuthLoginDTORequest;
@@ -46,13 +47,14 @@ public class LoginSpringController extends AbstractSpringController
       return ResponseEntity.status(response.status()).body(body);
     }
 
-    HttpCookie cookie = ResponseCookie.from("session", responseBody.refreshToken())
-        .httpOnly(true)
-        .secure(true)
-        .sameSite("Strict")
-        .path("/")
-        .maxAge(Duration.ofDays(7))
-        .build();
+    HttpCookie cookie =
+        ResponseCookie.from(Constants.REFRESH_TOKEN_COOKIE_NAME, responseBody.refreshToken())
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("Strict")
+            .path("/")
+            .maxAge(Duration.ofDays(Constants.REFRESH_TOKEN_COOKIE_EXPIRATION))
+            .build();
 
     return ResponseEntity.status(response.status())
         .header(HttpHeaders.SET_COOKIE, cookie.toString()).body(body);

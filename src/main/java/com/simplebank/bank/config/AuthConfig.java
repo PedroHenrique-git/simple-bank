@@ -5,10 +5,12 @@ import com.simplebank.bank.presentation.controllers.AuthenticatedUserOperation;
 import com.simplebank.bank.presentation.controllers.ControllerOperation;
 import com.simplebank.bank.presentation.controllers.LoginOperation;
 import com.simplebank.bank.presentation.controllers.LogoutOperation;
+import com.simplebank.bank.presentation.controllers.RefreshTokenOperation;
 import com.simplebank.bank.presentation.controllers.WebController;
 import com.simplebank.bank.usecases.AuthenticatedUser;
 import com.simplebank.bank.usecases.Login;
 import com.simplebank.bank.usecases.Logout;
+import com.simplebank.bank.usecases.RefreshToken;
 import com.simplebank.bank.usecases.UseCase;
 import com.simplebank.bank.usecases.ports.AuthAuthenticatedUserDTORequest;
 import com.simplebank.bank.usecases.ports.AuthAuthenticatedUserDTOResponse;
@@ -18,6 +20,8 @@ import com.simplebank.bank.usecases.ports.AuthLogoutDTORequest;
 import com.simplebank.bank.usecases.ports.AuthLogoutDTOResponse;
 import com.simplebank.bank.usecases.ports.AuthManager;
 import com.simplebank.bank.usecases.ports.InputValidator;
+import com.simplebank.bank.usecases.ports.RefreshAuthDTORequest;
+import com.simplebank.bank.usecases.ports.RefreshAuthDTOResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -88,6 +92,27 @@ public class AuthConfig
   @Bean
   public WebController<AuthLogoutDTOResponse, AuthLogoutDTORequest> logoutController(
       ControllerOperation<AuthLogoutDTOResponse, AuthLogoutDTORequest> operation)
+  {
+    return new WebController<>(operation);
+  }
+
+  @Bean
+  public UseCase<RefreshAuthDTORequest, RefreshAuthDTOResponse> refreshToken(
+      AuthManager authManager)
+  {
+    return new RefreshToken(authManager);
+  }
+
+  @Bean
+  public ControllerOperation<RefreshAuthDTOResponse, RefreshAuthDTORequest> refreshTokenOperation(
+      UseCase<RefreshAuthDTORequest, RefreshAuthDTOResponse> usecase)
+  {
+    return new RefreshTokenOperation(usecase);
+  }
+
+  @Bean
+  public WebController<RefreshAuthDTOResponse, RefreshAuthDTORequest> refreshTokenController(
+      ControllerOperation<RefreshAuthDTOResponse, RefreshAuthDTORequest> operation)
   {
     return new WebController<>(operation);
   }

@@ -47,7 +47,7 @@ public class SecurityFilter extends OncePerRequestFilter
       }
 
       var token = recoveryToken(request);
-      var payload = jwtService.getPayload(token);
+      var payload = jwtService.getPayload(token).orElseThrow();
       var user = repository.findById(payload.userId()).orElse(null);
 
       if (user == null || Objects.equals(payload.type().value(), TokenType.REFRESH.value()))

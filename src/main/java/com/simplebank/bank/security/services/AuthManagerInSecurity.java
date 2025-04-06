@@ -1,13 +1,18 @@
 package com.simplebank.bank.security.services;
 
+import com.simplebank.bank.domain.Constants;
 import com.simplebank.bank.domain.exceptions.ForbiddenException;
 import com.simplebank.bank.domain.exceptions.InvalidCredentialsException;
+import com.simplebank.bank.domain.exceptions.InvalidToken;
 import com.simplebank.bank.domain.models.User.User;
 import com.simplebank.bank.infra.jpa.entities.UserEntity;
 import com.simplebank.bank.infra.jpa.mappers.UserEntityMapper;
 import com.simplebank.bank.usecases.ports.AuthLoginDTORequest;
 import com.simplebank.bank.usecases.ports.AuthManager;
+import com.simplebank.bank.usecases.ports.RefreshAuthDTORequest;
+import com.simplebank.bank.usecases.ports.RefreshAuthDTOResponse;
 import com.simplebank.bank.usecases.ports.TokenDTO;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,10 +44,12 @@ public class AuthManagerInSecurity implements AuthManager
       var auth = this.authenticationManager.authenticate(emailPassword);
 
       var commonToken =
-          jwtService.generateToken((UserEntity) auth.getPrincipal(), TokenType.AUTH, 60);
+          jwtService.generateToken((UserEntity) auth.getPrincipal(), TokenType.AUTH,
+                  Constants.AUTH_TOKEN_EXPIRATION)
+              .orElseThrow();
       var refreshToken = jwtService
           .generateToken((UserEntity) auth.getPrincipal(), TokenType.REFRESH,
-              24 * 60 * 7);
+              Constants.REFRESH_TOKEN_EXPIRATION).orElseThrow();
 
       return new TokenDTO(commonToken, refreshToken);
     } catch (Exception e)
@@ -80,5 +87,31 @@ public class AuthManagerInSecurity implements AuthManager
     SecurityContextHolder.clearContext();
 
     return true;
+  }
+
+  @Override
+  public RefreshAuthDTOResponse refreshAuthentication(RefreshAuthDTORequest dto)
+      throws InvalidToken, ForbiddenException
+  {
+    var payload = jwtService.getPayload(dto.refreshToken())
+        .orElseThrow(() -> new InvalidToken("Invalid refresh token"));
+
+    if (Objects.equals(payload.type().value(), TokenType.AUTH.value()))
+    {
+      throw new InvalidToken("Invalid refresh token");
+    }
+
+    var userEntity =
+        (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+    if (payload.userId() != userEntity.getId())
+    {
+      throw new ForbiddenException("You can not perform this operation");
+    }
+
+    var authToken =
+        jwtService.generateToken(userEntity, TokenType.AUTH, 60).orElseThrow();
+
+    return new RefreshAuthDTOResponse(authToken);
   }
 }

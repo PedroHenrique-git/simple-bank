@@ -1,6 +1,7 @@
 package com.simplebank.bank.infra.controllers.v1;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.simplebank.bank.domain.Constants;
 import com.simplebank.bank.presentation.controllers.WebController;
 import com.simplebank.bank.presentation.controllers.ports.HttpRequest;
 import com.simplebank.bank.usecases.ports.AuthLogoutDTORequest;
@@ -39,7 +40,7 @@ public class LogoutSpringController extends AbstractSpringController
     body.put("success", response.success());
     setBodyData(responseErrors, responseBody);
 
-    HttpCookie cookie = ResponseCookie.from("session")
+    HttpCookie cookie = ResponseCookie.from(Constants.REFRESH_TOKEN_COOKIE_NAME)
         .httpOnly(true)
         .secure(true)
         .sameSite("Strict")

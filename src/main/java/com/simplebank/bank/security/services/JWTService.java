@@ -2,8 +2,7 @@ package com.simplebank.bank.security.services;
 
 import com.simplebank.bank.infra.jpa.entities.UserEntity;
 import java.security.Key;
-import java.time.Instant;
-import java.util.Date;
+import java.util.Optional;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
@@ -26,7 +25,7 @@ public class JWTService
   @Value("${spring.application.name}")
   private String issuer;
 
-  public String generateToken(UserEntity user, TokenType type, float expiration)
+  public Optional<String> generateToken(UserEntity user, TokenType type, float expiration)
   {
     try
     {
@@ -48,14 +47,14 @@ public class JWTService
       jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.HMAC_SHA256);
       jws.setPayload(claims.toJson());
 
-      return jws.getCompactSerialization();
+      return Optional.of(jws.getCompactSerialization());
     } catch (JoseException e)
     {
-      return "";
+      return Optional.empty();
     }
   }
 
-  public Payload getPayload(String jwt)
+  public Optional<Payload> getPayload(String jwt)
   {
     try
     {
@@ -72,18 +71,11 @@ public class JWTService
       var uId = jwtClaims.getClaimValue(USER_ID, Long.class);
       var tType = jwtClaims.getClaimValue(TYPE, String.class);
 
-      return new Payload(uId, TokenType.valueOf(tType));
+      return Optional.of(new Payload(uId, TokenType.valueOf(tType)));
     } catch (Exception e)
     {
-      return null;
+      return Optional.empty();
     }
-  }
-
-  private Date getExpiration()
-  {
-    var oneHour = 60 * 60;
-
-    return Date.from(Instant.now().plusSeconds(oneHour));
   }
 
   private Key getSigningKey()
