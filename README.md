@@ -1,224 +1,230 @@
-# Simple bank
+# Simple Bank 🏦
 
-simple bank is an application that simulates the basic functionality of a bank
+**Simple Bank** is an application that simulates the basic functionality of a bank, providing features such as account creation, deposits, withdrawals, transfers, and user authentication.
 
-### Features
+## Get Started 🚀
 
-1. Create account
-2. Deposit
-3. Transfer
-4. Withdraw
-5. Login
-6. Get authenticated user
-7. Logout
-8. Refresh token
+To run the application, simply run the following command: `docker compose up -d --build`
 
-### Api docs
+## Features 🔧
 
-#### **Create account**
+- **Create Account** 📝
+- **Deposit Funds** 💵
+- **Transfer Funds** 🔄
+- **Withdraw Funds** 💸
+- **Login** 🔐
+- **Get Authenticated User** 👤
+- **Logout** 🚪
+- **Refresh Token** 🔄
 
-**Path:** /api/v1/accounts <br />
-**Method:** POST <br />
-**Requires authentication:** False <br />
-**Description:** Endpoint to create a new account, returns the created account and user
+---
 
-obs: for simplicity purposes, i only validated the document format
+## API Documentation 📚
 
-**Body example:**
+### **Create Account** 📝
 
+- **Path:** `/api/v1/accounts`
+- **Method:** `POST`
+- **Requires Authentication:** ❌ No
+- **Description:** Create a new user account and return the created account and user details.
+
+> **Note:** Only the document format is validated for simplicity.
+
+#### **Request Body Example:**
+
+```json
+{
+    "name": "Pedro",
+    "password": "AA!45aaa",
+    "email": "pedro204@email.com",
+    "document": "203.306.900-24"
+}
 ```
-    {
-        "name": "pedro",
-        "password": "AA!45aaa",
-        "email": "pedro204@email.com",
-        "document": "203.306.900-24"
+
+#### **Success Response Example:**
+
+```json
+{
+    "message": "Account created successfully",
+    "success": true,
+    "data": {
+        "accountId": 206,
+        "userId": 206,
+        "name": "Pedro",
+        "email": "pedro209@email.com"
     }
+}
 ```
 
-**Success response example:**
+### Deposit Funds 💵
 
+- **Path:** `/api/v1/accounts/deposit`
+- **Method:** `POST`
+- **Requires Authentication:**  ✅ Yes
+- **Description:** Deposit a specified amount into an account and return the new balance.
+
+#### **Request Body Example:**
+
+```json
+{
+    "accountId": 102,
+    "amount": 1000
+}
 ```
-    {
-        "message": "account created successfully",
-        "success": true,
-        "data": {
-            "accountId": 206,
-            "userId": 206,
-            "name": "pedro",
-            "email": "pedro209@email.com"
-        }
+
+#### **Success Response Example:**
+
+```json
+{
+    "message": "Deposit made successfully",
+    "success": true,
+    "data": {
+        "balance": 1000.0
     }
+}
 ```
 
-#### **Deposit**
+### Withdraw Funds 💸
 
-**Path:** /api/v1/accounts/deposit <br />
-**Method:** POST <br />
-**Requires authentication:** True <br />
-**Description:** Endpoint for depositing an amount into an account, returns the new account balance
+- **Path:** `/api/v1/accounts/withdraw`
+- **Method:** `POST`
+- **Requires Authentication:**  ✅ Yes
+- **Description:** Withdraw a specified amount from an account and return the new balance.
 
-**Body example:**
+#### **Request Body Example:**
 
+```json
+{
+    "accountId": 102,
+    "amount": 1000
+}
 ```
-    {
-        "accountId": 102,
-        "amount": 1000
+
+#### **Success Response Example:**
+
+```json
+{
+    "message": "Withdrawal made successfully",
+    "success": true,
+    "data": {
+        "balance": 9000.0
     }
+}
 ```
 
-**Success response example:**
+### Transfer Funds 🔄
 
+- **Path:** `/api/v1/transfers`
+- **Method:** `POST`
+- **Requires Authentication:**  ✅ Yes
+- **Description:** Transfer a specified amount between accounts and return the new balance of the payer's account.
+
+#### **Request Body Example:**
+
+```json
+{
+    "payerId": 206,
+    "payeeId": 153,
+    "amount": 100
+}
 ```
-    {
-        "message": "deposit made successfully",
-        "success": true,
-        "data": {
-            "balance": 1000.0
-        }
+
+#### **Success Response Example:**
+
+```json
+{
+    "message": "Transfer made successfully",
+    "success": true,
+    "data": {
+        "balance": 8600.0
     }
+}
 ```
 
-#### **Withdraw**
+### Login 🔐
 
-**Path:** /api/v1/accounts/withdraw <br />
-**Method:** POST <br />
-**Requires authentication:** True <br />
-**Description:** Endpoint for withdrawing an amount from an account, returns the new account balance
+- **Path:** `/api/v1/auth/login`
+- **Method:** `POST`
+- **Requires Authentication:**  ❌ No
+- **Description:** Authenticate a user and return an auth token and refresh token.
 
-**Body example:**
+#### **Request Body Example:**
 
+```json
+{
+    "email": "pedro209@email.com",
+    "password": "AA!45aaa"
+}
 ```
-    {
-        "accountId": 102,
-        "amount": 1000
+
+#### **Success Response Example:**
+
+```json
+{
+    "message": "Login successful",
+    "success": true,
+    "data": {
+        "authToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiYW5rIiwiYXVkIjoiY2xpZW50IiwiZXhwIjoxNzQzOTczNjQ2LCJqdGkiOiJlLWFtcWZ2ZmtEUV9qZFQ5a0xrX1FnIiwiaWF0IjoxNzQzOTcwMDQ2LCJuYmYiOjE3NDM5Njk5MjYsInN1YiI6InBlZHJvIiwidXNlcklkIjoyMDYsInR5cGUiOiJBVVRIIn0.iFVmoNO0iwB7FsYWW93T4nkJwisz9wx13iqrgm4sRDM",
+        "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiYW5rIiwiYXVkIjoiY2xpZW50IiwiZXhwIjoxNzQ0NTc0ODQ2LCJqdGkiOiJybFNCVnVNNmtualZreElFTkJOQmtRIiwiaWF0IjoxNzQzOTcwMDQ2LCJuYmYiOjE3NDM5Njk5MjYsInN1YiI6InBlZHJvIiwidXNlcklkIjoyMDYsInR5cGUiOiJSRUZSRVNIIn0.6r0SUnBpAqMVmc1uvT5a5MHue55u7HgCz3AiXrNDVTM"
     }
+}
 ```
 
-**Success response example:**
+### Logout 🚪
 
-```
-    {
-        "message": "withdraw made successfully",
-        "success": true,
-        "data": {
-            "balance": 9000.0
-        }
+- **Path:** `/api/v1/auth/logout`
+- **Method:** `POST`
+- **Requires Authentication:**   ✅ Yes
+- **Description:** Logs the user out of the system and deletes the refresh token cookie. Returns the redirect URL.
+
+#### **Success Response Example:**
+
+```json
+{
+    "message": "You have been logged out successfully.",
+    "success": true,
+    "data": {
+        "redirectUrl": "/login"
     }
+}
 ```
 
-#### **Transfer**
+### Refresh Token 🔄
 
-**Path:** /api/v1/transfers <br />
-**Method:** POST <br />
-**Requires authentication:** True <br />
-**Description:** Endpoint to transfer an amount between accounts, returns the new account balance
+- **Path:** `/api/v1/auth/refresh-token`
+- **Method:** `POST`
+- **Requires Authentication:**   ❌ No
+- **Description:** Generates a new authentication token using the refresh token.
 
-**Body example:**
+#### **Success Response Example:**
 
-```
-    {
-        "payerId": 206,
-        "payeeId": 153,
-        "amount": 100
+```json
+{
+    "message": "Token updated successfully",
+    "success": true,
+    "data": {
+        "authToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiYW5rIiwiYXVkIjoiY2xpZW50IiwiZXhwIjoxNzQzOTc0ODU3LCJqdGkiOiJVV2ZOZmpBa1BiM09ySEVYZU9uQW53IiwiaWF0IjoxNzQzOTcxMjU3LCJuYmYiOjE3NDM5NzExMzcsInN1YiI6InBlZHJvIiwidXNlcklkIjoyMDYsInR5cGUiOiJBVVRIIn0.IzVpm0ch-UteEMn8CEUkB-SMFE93W4ublIYm6arKLBQ"
     }
+}
 ```
 
-**Success response example:**
+### Get Authenticated User 👤
 
-```
-    {
-        "message": "transfer made successfully",
-        "success": true,
-        "data": {
-            "value": 8600.0
-        }
+- **Path:** `/api/v1/auth/authenticated-user`
+- **Method:** `POST`
+- **Requires Authentication:**   ✅ Yes
+- **Description:** Retrieves the details of the currently authenticated user.
+
+#### **Success Response Example:**
+
+```json
+{
+    "message": "Authenticated user data successfully obtained",
+    "success": true,
+    "data": {
+        "id": 206,
+        "name": "Pedro",
+        "email": "pedro209@email.com"
     }
-```
-
-#### **Login**
-
-**Path:** /api/v1/auth/login <br />
-**Method:** POST <br />
-**Requires authentication:** False <br />
-**Description:** Endpoint to login into the system,  returns the auth and refresh token
-
-**Body example:**
-
-```
-    {
-        "email": "pedro209@email.com",
-        "password": "AA!45aaa"
-    }
-```
-
-**Success response example:**
-
-```
-    {
-        "message": "login successful",
-        "success": true,
-        "data": {
-            "authToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiYW5rIiwiYXVkIjoiY2xpZW50IiwiZXhwIjoxNzQzOTczNjQ2LCJqdGkiOiJlLWFtcWZ2ZmtEUV9qZFQ5a0xrX1FnIiwiaWF0IjoxNzQzOTcwMDQ2LCJuYmYiOjE3NDM5Njk5MjYsInN1YiI6InBlZHJvIiwidXNlcklkIjoyMDYsInR5cGUiOiJBVVRIIn0.iFVmoNO0iwB7FsYWW93T4nkJwisz9wx13iqrgm4sRDM",
-            "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiYW5rIiwiYXVkIjoiY2xpZW50IiwiZXhwIjoxNzQ0NTc0ODQ2LCJqdGkiOiJybFNCVnVNNmtualZreElFTkJOQmtRIiwiaWF0IjoxNzQzOTcwMDQ2LCJuYmYiOjE3NDM5Njk5MjYsInN1YiI6InBlZHJvIiwidXNlcklkIjoyMDYsInR5cGUiOiJSRUZSRVNIIn0.6r0SUnBpAqMVmc1uvT5a5MHue55u7HgCz3AiXrNDVTM"
-        }
-    }
-```
-
-#### **Logout**
-
-**Path:** /api/v1/auth/logout <br />
-**Method:** GET <br />
-**Requires authentication:** False <br />
-**Description:** Endpoint for system logout, returns the redirect url and deletes the refreshToken cookie
-
-**Success response example:**
-
-```
-    {
-        "message": "You have been logged out successfully.",
-        "success": true,
-        "data": {
-            "redirectUrl": "/login"
-        }
-    }
-```
-
-#### **Refresh token**
-
-**Path:** /api/v1/auth/refresh-token <br />
-**Method:** GET <br />
-**Requires authentication:** False <br />
-**Description:** Endpoint to get a new authToken, based on the refreshToken cookie
-
-**Success response example:**
-
-```
-    {
-        "message": "Token updated successfully",
-        "success": true,
-        "data": {
-            "authToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiYW5rIiwiYXVkIjoiY2xpZW50IiwiZXhwIjoxNzQzOTc0ODU3LCJqdGkiOiJVV2ZOZmpBa1BiM09ySEVYZU9uQW53IiwiaWF0IjoxNzQzOTcxMjU3LCJuYmYiOjE3NDM5NzExMzcsInN1YiI6InBlZHJvIiwidXNlcklkIjoyMDYsInR5cGUiOiJBVVRIIn0.IzVpm0ch-UteEMn8CEUkB-SMFE93W4ublIYm6arKLBQ"
-        }
-    }
-```
-
-#### **Authenticated user**
-
-**Path:** /api/v1/auth/authenticated-user <br />
-**Method:** GET <br />
-**Requires authentication:** True <br />
-**Description:** Endpoint to get authenticated user data
-
-**Success response example:**
-
-```
-   {
-        "message": "authenticated user data successfully obtained",
-        "success": true,
-        "data": {
-            "id": 206,
-            "name": "pedro",
-            "email": "pedro209@email.com"
-        }
-    }
+}
 ```
