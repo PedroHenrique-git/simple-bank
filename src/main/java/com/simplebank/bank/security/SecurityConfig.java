@@ -3,6 +3,7 @@ package com.simplebank.bank.security;
 import com.simplebank.bank.infra.jpa.repositories.UserRepository;
 import com.simplebank.bank.security.filters.SecurityFilter;
 import com.simplebank.bank.security.services.AuthorizationService;
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -33,6 +35,14 @@ public class SecurityConfig
   {
     http
         .csrf(AbstractHttpConfigurer::disable)
+        .cors(cors -> cors.configurationSource(request -> {
+          CorsConfiguration configuration = new CorsConfiguration();
+          configuration.setAllowedOrigins(List.of("*"));
+          configuration.setAllowedMethods(List.of("*"));
+          configuration.setAllowedHeaders(List.of("*"));
+
+          return configuration;
+        }))
         .sessionManagement(session -> session.sessionCreationPolicy(
             SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
