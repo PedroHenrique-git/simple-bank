@@ -37,9 +37,11 @@ public class SecurityConfig
         .csrf(AbstractHttpConfigurer::disable)
         .cors(cors -> cors.configurationSource(request -> {
           CorsConfiguration configuration = new CorsConfiguration();
-          configuration.setAllowedOrigins(List.of("*"));
-          configuration.setAllowedMethods(List.of("*"));
-          configuration.setAllowedHeaders(List.of("*"));
+          configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+          configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
+          configuration.setAllowedHeaders(
+              List.of("X-Requested-With", "Content-Type", "Accept", "Origin", "Authorization"));
+          configuration.setAllowCredentials(true);
 
           return configuration;
         }))
