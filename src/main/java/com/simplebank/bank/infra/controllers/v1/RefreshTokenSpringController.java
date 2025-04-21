@@ -6,12 +6,10 @@ import com.simplebank.bank.presentation.controllers.WebController;
 import com.simplebank.bank.presentation.controllers.ports.HttpRequest;
 import com.simplebank.bank.usecases.ports.RefreshAuthDTORequest;
 import com.simplebank.bank.usecases.ports.RefreshAuthDTOResponse;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +30,6 @@ public class RefreshTokenSpringController extends AbstractSpringController
 
   @GetMapping
   public ResponseEntity<ObjectNode> refreshToken(
-      @RequestHeader Map<String, String> headers,
       @CookieValue(name = Constants.REFRESH_TOKEN_COOKIE_NAME, defaultValue = "")
       String refreshToken)
   {
