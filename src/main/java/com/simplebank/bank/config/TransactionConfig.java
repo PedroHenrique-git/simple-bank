@@ -13,15 +13,14 @@ public class TransactionConfig
 {
   @Bean
   public TransactionRepositoryGateway transactionRepositoryGateway(TransactionRepository repository,
-                                                                   TransactionEntityMapper mapper,
-                                                                   AccountEntityMapper accountMapper)
+                                                                   TransactionEntityMapper mapper)
   {
-    return new TransactionRepositoryJpaGateway(repository, mapper, accountMapper);
+    return new TransactionRepositoryJpaGateway(repository, mapper);
   }
 
   @Bean
-  public TransactionEntityMapper transactionEntityMapper()
+  public TransactionEntityMapper transactionEntityMapper(AccountEntityMapper accountMapper)
   {
-    return new TransactionEntityMapper();
+    return new TransactionEntityMapper(accountMapper);
   }
 }

@@ -7,8 +7,10 @@ import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
 import com.simplebank.bank.usecases.ports.CreateAccountDTOResponse;
 import com.simplebank.bank.usecases.ports.Encoder;
 import com.simplebank.bank.usecases.ports.InputValidator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 public class CreateAccount implements UseCase<CreateAccountDTORequest, CreateAccountDTOResponse>
 {
   private final AccountRepositoryGateway repository;

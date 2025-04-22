@@ -10,13 +10,16 @@ public class AccountEntityMapper
   private final AccountFactoryMaker accountFactoryMaker;
   private final AccountEntityFactoryMaker accountEntityFactoryMaker;
   private final UserEntityMapper userMapper;
+  private final TransactionEntityMapper transactionMapper;
 
   public AccountEntityMapper(UserEntityMapper userMapper, AccountFactoryMaker accountFactoryMaker,
-                             AccountEntityFactoryMaker accountEntityFactoryMaker)
+                             AccountEntityFactoryMaker accountEntityFactoryMaker,
+                             TransactionEntityMapper transactionMapper)
   {
     this.userMapper = userMapper;
     this.accountFactoryMaker = accountFactoryMaker;
     this.accountEntityFactoryMaker = accountEntityFactoryMaker;
+    this.transactionMapper = transactionMapper;
   }
 
   public Account toModel(AccountEntity a)
@@ -37,6 +40,11 @@ public class AccountEntityMapper
     account.setId(a.getId());
     account.setBalance(a.getBalance());
     account.setUser(userMapper.toModel(a.getUser()));
+    
+    account.setPayerTransactions(
+        a.getPayerTransactions().stream().map(transactionMapper::toModel).toList());
+    account.setPayeeTransactions(
+        a.getPayeeTransactions().stream().map(transactionMapper::toModel).toList());
 
     return account;
   }

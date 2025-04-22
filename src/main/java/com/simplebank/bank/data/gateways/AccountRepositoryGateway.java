@@ -10,5 +10,7 @@ public interface AccountRepositoryGateway
 
   Account find(long id);
 
+  Account findByUserId(long id);
+
   void delete(long id);
 }

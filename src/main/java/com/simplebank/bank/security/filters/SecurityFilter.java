@@ -26,11 +26,18 @@ public class SecurityFilter extends OncePerRequestFilter
 {
   private final UserRepository repository;
   private final JWTService jwtService;
+  private final Map<String, List<String>> whiteList;
 
   public SecurityFilter(JWTService jwtService, UserRepository repository)
   {
     this.jwtService = jwtService;
     this.repository = repository;
+
+    this.whiteList =
+        Map.of("/api/v1/accounts", List.of("GET"),
+            "/api/v1/auth/login", List.of("POST"),
+            "/api/v1/auth/logout", List.of("GET"),
+            "/api/v1/auth/refresh-token", List.of("POST"));
   }
 
   @Override
@@ -99,8 +106,11 @@ public class SecurityFilter extends OncePerRequestFilter
     var uri = request.getRequestURI();
     var method = request.getMethod();
 
-    return List.of("/api/v1/accounts", "/api/v1/auth/login", "/api/v1/auth/logout",
-        "/api/v1/auth/refresh-token").contains(uri) &&
-        List.of("POST", "GET").contains(method);
+    if (!whiteList.containsKey(uri))
+    {
+      return false;
+    }
+
+    return whiteList.get(uri).contains(method);
   }
 }

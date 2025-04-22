@@ -9,11 +9,12 @@ import com.simplebank.bank.domain.models.User.User;
 import com.simplebank.bank.infra.jpa.entities.UserEntity;
 import com.simplebank.bank.infra.jpa.mappers.UserEntityMapper;
 import com.simplebank.bank.infra.jpa.repositories.UserRepository;
+import com.simplebank.bank.usecases.ports.AuthAuthenticatedUserDTOResponse;
 import com.simplebank.bank.usecases.ports.AuthLoginDTORequest;
 import com.simplebank.bank.usecases.ports.AuthManager;
+import com.simplebank.bank.usecases.ports.AuthenticationDTO;
 import com.simplebank.bank.usecases.ports.RefreshAuthDTORequest;
 import com.simplebank.bank.usecases.ports.RefreshAuthDTOResponse;
-import com.simplebank.bank.usecases.ports.TokenDTO;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,22 +41,24 @@ public class AuthManagerInSecurity implements AuthManager
   }
 
   @Override
-  public TokenDTO authenticate(AuthLoginDTORequest dto) throws InvalidCredentialsException
+  public AuthenticationDTO authenticate(AuthLoginDTORequest dto) throws InvalidCredentialsException
   {
     try
     {
       var emailPassword = new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
       var auth = this.authenticationManager.authenticate(emailPassword);
+      var user = (UserEntity) auth.getPrincipal();
 
       var commonToken =
-          jwtService.generateToken((UserEntity) auth.getPrincipal(), TokenType.AUTH,
-                  Constants.AUTH_TOKEN_EXPIRATION)
+          jwtService.generateToken(user, TokenType.AUTH, Constants.AUTH_TOKEN_EXPIRATION)
               .orElseThrow();
-      var refreshToken = jwtService
-          .generateToken((UserEntity) auth.getPrincipal(), TokenType.REFRESH,
-              Constants.REFRESH_TOKEN_EXPIRATION).orElseThrow();
 
-      return new TokenDTO(commonToken, refreshToken);
+      var refreshToken =
+          jwtService.generateToken(user, TokenType.REFRESH, Constants.REFRESH_TOKEN_EXPIRATION)
+              .orElseThrow();
+
+      return new AuthenticationDTO(commonToken, refreshToken,
+          new AuthAuthenticatedUserDTOResponse(user.getId(), user.getName(), user.getEmail()));
     } catch (Exception e)
     {
       log.error("[AUTH MANAGER ERROR]: {}", e.toString());

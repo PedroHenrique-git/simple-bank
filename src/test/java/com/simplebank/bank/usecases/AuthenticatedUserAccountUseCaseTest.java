@@ -7,51 +7,54 @@ import com.simplebank.bank.config.UserConfig;
 import com.simplebank.bank.domain.exceptions.ForbiddenException;
 import com.simplebank.bank.domain.exceptions.UnauthorizedException;
 import com.simplebank.bank.domain.exceptions.UseCaseException;
-import com.simplebank.bank.usecases.ports.AuthAuthenticatedUserDTOResponse;
-import com.simplebank.bank.usecases.ports.AuthLoginDTORequest;
-import com.simplebank.bank.usecases.ports.AuthLoginDTOResponse;
+import com.simplebank.bank.mocks.UserMock;
+import com.simplebank.bank.usecases.ports.AuthManager;
+import com.simplebank.bank.usecases.ports.AuthenticatedUserAccountDTORequest;
+import com.simplebank.bank.usecases.ports.AuthenticatedUserAccountDTOResponse;
 import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
 import com.simplebank.bank.usecases.ports.CreateAccountDTOResponse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
+import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @Import(value = {UserConfig.class, AccountConfig.class, TransactionConfig.class,
     CommonConfig.class})
-public class LoginUseCaseTest
+public class AuthenticatedUserAccountUseCaseTest
 {
   @Autowired
-  public UseCase<AuthLoginDTORequest, AuthLoginDTOResponse> loginUsecase;
+  UseCase<AuthenticatedUserAccountDTORequest, AuthenticatedUserAccountDTOResponse> usecase;
 
   @Autowired
-  public UseCase<CreateAccountDTORequest, CreateAccountDTOResponse> createAccountUsecase;
+  UseCase<CreateAccountDTORequest, CreateAccountDTOResponse> createAccountUsecase;
+
+  @MockitoBean
+  AuthManager authManager;
 
   @Test
-  void testLoginUseCase() throws ForbiddenException, UnauthorizedException, UseCaseException
+  void testAuthenticatedAccountUser()
+      throws ForbiddenException, UnauthorizedException, UseCaseException
   {
     var ac = createAccountUsecase.execute(
         new CreateAccountDTORequest("Pedro", "p50@email.com", "AA!45aaa", "329.959.880-60"));
+    var user = UserMock.createClientUser();
 
-    assertThrows(UseCaseException.class,
-        () -> loginUsecase.execute(new AuthLoginDTORequest(null, null)));
-    assertThrows(UseCaseException.class,
-        () -> loginUsecase.execute(new AuthLoginDTORequest("p50@email.comABC", "1214")));
-    assertThrows(UseCaseException.class,
-        () -> loginUsecase.execute(new AuthLoginDTORequest("p50@email.com", "1214")));
+    user.setId(ac.userId());
+    user.setEmail(ac.email());
+    user.setName(ac.name());
 
-    var loginResult = loginUsecase.execute(new AuthLoginDTORequest("p50@email.com", "AA!45aaa"));
+    when(authManager.getAuthenticatedUser()).thenReturn(user);
 
-    assertInstanceOf(AuthLoginDTOResponse.class, loginResult);
-    assertInstanceOf(String.class, loginResult.authToken());
-    assertInstanceOf(String.class, loginResult.refreshToken());
-    assertInstanceOf(AuthAuthenticatedUserDTOResponse.class, loginResult.user());
+    var authenticatedAccount = usecase.execute(new AuthenticatedUserAccountDTORequest());
+
+    assertInstanceOf(AuthenticatedUserAccountDTOResponse.class, authenticatedAccount);
   }
 }

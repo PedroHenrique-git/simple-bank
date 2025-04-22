@@ -30,9 +30,10 @@ public class Login implements UseCase<AuthLoginDTORequest, AuthLoginDTOResponse>
         throw new UseCaseException("Invalid login input", violations);
       }
 
-      var token = authManager.authenticate(dto);
+      var response = authManager.authenticate(dto);
 
-      return new AuthLoginDTOResponse(token.commonToken(), token.refreshToken());
+      return new AuthLoginDTOResponse(response.commonToken(), response.refreshToken(),
+          response.user());
     } catch (InvalidCredentialsException e)
     {
       throw new UseCaseException(e.getMessage());

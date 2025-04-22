@@ -2,7 +2,11 @@ package com.simplebank.bank.infra.controllers.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 public abstract class AbstractSpringController
 {
@@ -43,5 +47,15 @@ public abstract class AbstractSpringController
     }
 
     this.body.set("data", mapper.valueToTree(body));
+  }
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<Map<String, String>> handler(Exception exception)
+  {
+    Map<String, String> body = new HashMap<>();
+
+    body.put("message", exception.getMessage());
+
+    return ResponseEntity.badRequest().body(body);
   }
 }

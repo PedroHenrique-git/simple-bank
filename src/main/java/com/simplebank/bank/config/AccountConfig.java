@@ -14,6 +14,7 @@ import com.simplebank.bank.infra.validators.JakartaAccountValidation;
 import com.simplebank.bank.infra.validators.JakartaDepositValidation;
 import com.simplebank.bank.infra.validators.JakartaTransferValidation;
 import com.simplebank.bank.infra.validators.JakartaWithdrawValidation;
+import com.simplebank.bank.presentation.controllers.AuthenticatedUserAccountOperation;
 import com.simplebank.bank.presentation.controllers.ControllerOperation;
 import com.simplebank.bank.presentation.controllers.CreateAccountOperation;
 import com.simplebank.bank.presentation.controllers.DepositOperation;
@@ -21,13 +22,17 @@ import com.simplebank.bank.presentation.controllers.TransferOperation;
 import com.simplebank.bank.presentation.controllers.WebController;
 import com.simplebank.bank.presentation.controllers.WithdrawOperation;
 import com.simplebank.bank.services.TransferAuthService;
+import com.simplebank.bank.usecases.AuthenticatedUserAccount;
 import com.simplebank.bank.usecases.CreateAccount;
 import com.simplebank.bank.usecases.Deposit;
 import com.simplebank.bank.usecases.Transfer;
 import com.simplebank.bank.usecases.UseCase;
 import com.simplebank.bank.usecases.Withdraw;
 import com.simplebank.bank.usecases.mapper.CreateAccountDTOMapper;
+import com.simplebank.bank.usecases.mapper.TransactionDTOMapper;
 import com.simplebank.bank.usecases.ports.AuthManager;
+import com.simplebank.bank.usecases.ports.AuthenticatedUserAccountDTORequest;
+import com.simplebank.bank.usecases.ports.AuthenticatedUserAccountDTOResponse;
 import com.simplebank.bank.usecases.ports.CreateAccountDTORequest;
 import com.simplebank.bank.usecases.ports.CreateAccountDTOResponse;
 import com.simplebank.bank.usecases.ports.DepositDTORequest;
@@ -41,6 +46,7 @@ import com.simplebank.bank.usecases.ports.WithdrawDTORequest;
 import com.simplebank.bank.usecases.ports.WithdrawDTOResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 @Configuration
 public class AccountConfig
@@ -56,9 +62,17 @@ public class AccountConfig
   @Bean
   public AccountEntityMapper accountEntityMapper(UserEntityMapper userMapper,
                                                  AccountFactoryMaker accountFactoryMaker,
-                                                 AccountEntityFactoryMaker accountEntityFactoryMaker)
+                                                 AccountEntityFactoryMaker accountEntityFactoryMaker,
+                                                 @Lazy TransactionEntityMapper transactionMapper)
   {
-    return new AccountEntityMapper(userMapper, accountFactoryMaker, accountEntityFactoryMaker);
+    return new AccountEntityMapper(userMapper, accountFactoryMaker, accountEntityFactoryMaker,
+        transactionMapper);
+  }
+
+  @Bean
+  public TransactionDTOMapper transactionDTOMapper()
+  {
+    return new TransactionDTOMapper();
   }
 
   @Bean
@@ -179,6 +193,28 @@ public class AccountConfig
       AuthManager authManager)
   {
     return new Withdraw(accountRepository, validator, authManager);
+  }
+
+  @Bean
+  public UseCase<AuthenticatedUserAccountDTORequest, AuthenticatedUserAccountDTOResponse> authenticatedUserAccount(
+      AuthManager authManager, AccountRepositoryGateway accountRepository,
+      TransactionDTOMapper dtoMapper)
+  {
+    return new AuthenticatedUserAccount(authManager, accountRepository, dtoMapper);
+  }
+
+  @Bean
+  public ControllerOperation<AuthenticatedUserAccountDTOResponse, AuthenticatedUserAccountDTORequest> authenticatedUserAccountOperation(
+      UseCase<AuthenticatedUserAccountDTORequest, AuthenticatedUserAccountDTOResponse> usecase)
+  {
+    return new AuthenticatedUserAccountOperation(usecase);
+  }
+
+  @Bean
+  public WebController<AuthenticatedUserAccountDTOResponse, AuthenticatedUserAccountDTORequest> authenticatedUserAccountWebController(
+      ControllerOperation<AuthenticatedUserAccountDTOResponse, AuthenticatedUserAccountDTORequest> operation)
+  {
+    return new WebController<>(operation);
   }
 
   @Bean

@@ -11,7 +11,7 @@ public interface AuthManager
   RefreshAuthDTOResponse refreshAuthentication(RefreshAuthDTORequest dto)
       throws InvalidToken, UnauthorizedException;
 
-  TokenDTO authenticate(AuthLoginDTORequest dto) throws InvalidCredentialsException;
+  AuthenticationDTO authenticate(AuthLoginDTORequest dto) throws InvalidCredentialsException;
 
   User getAuthenticatedUser();
 

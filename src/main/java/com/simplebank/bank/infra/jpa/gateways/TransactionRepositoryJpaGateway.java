@@ -2,7 +2,6 @@ package com.simplebank.bank.infra.jpa.gateways;
 
 import com.simplebank.bank.data.gateways.TransactionRepositoryGateway;
 import com.simplebank.bank.domain.models.Transaction.Transaction;
-import com.simplebank.bank.infra.jpa.mappers.AccountEntityMapper;
 import com.simplebank.bank.infra.jpa.mappers.TransactionEntityMapper;
 import com.simplebank.bank.infra.jpa.repositories.TransactionRepository;
 
@@ -12,13 +11,10 @@ public class TransactionRepositoryJpaGateway implements TransactionRepositoryGat
   private final TransactionEntityMapper mapper;
 
   public TransactionRepositoryJpaGateway(TransactionRepository repository,
-                                         TransactionEntityMapper mapper,
-                                         AccountEntityMapper accountMapper)
+                                         TransactionEntityMapper mapper)
   {
     this.repository = repository;
     this.mapper = mapper;
-
-    this.mapper.setAccountMapper(accountMapper);
   }
 
   @Override

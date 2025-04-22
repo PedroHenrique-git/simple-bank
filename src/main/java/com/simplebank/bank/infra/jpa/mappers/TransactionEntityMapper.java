@@ -2,12 +2,15 @@ package com.simplebank.bank.infra.jpa.mappers;
 
 import com.simplebank.bank.domain.models.Transaction.Transaction;
 import com.simplebank.bank.infra.jpa.entities.TransactionEntity;
-import lombok.Setter;
 
-@Setter
 public class TransactionEntityMapper
 {
-  private AccountEntityMapper accountMapper;
+  private final AccountEntityMapper accountMapper;
+
+  public TransactionEntityMapper(AccountEntityMapper accountMapper)
+  {
+    this.accountMapper = accountMapper;
+  }
 
   public Transaction toModel(TransactionEntity t)
   {

@@ -46,6 +46,14 @@ public class AccountRepositoryJpaGateway implements AccountRepositoryGateway
   }
 
   @Override
+  public Account findByUserId(long id)
+  {
+    var entity = repository.findByUserId(id);
+
+    return mapper.toModel(entity);
+  }
+
+  @Override
   public void delete(long id)
   {
     repository.deleteById(id);
