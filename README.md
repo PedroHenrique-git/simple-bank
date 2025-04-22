@@ -60,7 +60,7 @@ To run the application, simply run the following command: `docker compose up -d 
 
 - **Path:** `/api/v1/accounts/me`
 - **Method:** `POST`
-- **Requires Authentication:** ❌ Yes
+- **Requires Authentication:** ✅ Yes
 - **Description:** get the account of the logged in user
 
 #### **Success Response Example:**
