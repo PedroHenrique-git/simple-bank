@@ -56,6 +56,28 @@ To run the application, simply run the following command: `docker compose up -d 
 }
 ```
 
+### **Logged in user account** 📝
+
+- **Path:** `/api/v1/accounts/me`
+- **Method:** `POST`
+- **Requires Authentication:** ❌ Yes
+- **Description:** get the account of the logged in user
+
+#### **Success Response Example:**
+
+```json
+{
+  "message": "account data successfully obtained",
+  "success": true,
+  "data": {
+    "id": 252,
+    "balance": 0.0,
+    "payerTransactions": [],
+    "payeeTransactions": []
+  }
+}
+```
+
 ### Deposit Funds 💵
 
 - **Path:** `/api/v1/accounts/deposit`
@@ -166,6 +188,11 @@ To run the application, simply run the following command: `docker compose up -d 
     "data": {
         "authToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiYW5rIiwiYXVkIjoiY2xpZW50IiwiZXhwIjoxNzQzOTczNjQ2LCJqdGkiOiJlLWFtcWZ2ZmtEUV9qZFQ5a0xrX1FnIiwiaWF0IjoxNzQzOTcwMDQ2LCJuYmYiOjE3NDM5Njk5MjYsInN1YiI6InBlZHJvIiwidXNlcklkIjoyMDYsInR5cGUiOiJBVVRIIn0.iFVmoNO0iwB7FsYWW93T4nkJwisz9wx13iqrgm4sRDM",
         "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiYW5rIiwiYXVkIjoiY2xpZW50IiwiZXhwIjoxNzQ0NTc0ODQ2LCJqdGkiOiJybFNCVnVNNmtualZreElFTkJOQmtRIiwiaWF0IjoxNzQzOTcwMDQ2LCJuYmYiOjE3NDM5Njk5MjYsInN1YiI6InBlZHJvIiwidXNlcklkIjoyMDYsInR5cGUiOiJSRUZSRVNIIn0.6r0SUnBpAqMVmc1uvT5a5MHue55u7HgCz3AiXrNDVTM"
+        "user": {
+            "id": 1,
+            "name": "pedro",
+            "email": "test@email.com"
+        }    
     }
 }
 ```
