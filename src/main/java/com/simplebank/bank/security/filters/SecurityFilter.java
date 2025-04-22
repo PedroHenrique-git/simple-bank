@@ -37,7 +37,7 @@ public class SecurityFilter extends OncePerRequestFilter
         Map.of("/api/v1/accounts", List.of("GET"),
             "/api/v1/auth/login", List.of("POST"),
             "/api/v1/auth/logout", List.of("GET"),
-            "/api/v1/auth/refresh-token", List.of("POST"));
+            "/api/v1/auth/refresh-token", List.of("GET"));
   }
 
   @Override

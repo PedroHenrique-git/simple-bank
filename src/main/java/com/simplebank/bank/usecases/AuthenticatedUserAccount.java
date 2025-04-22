@@ -8,9 +8,7 @@ import com.simplebank.bank.usecases.mapper.TransactionDTOMapper;
 import com.simplebank.bank.usecases.ports.AuthManager;
 import com.simplebank.bank.usecases.ports.AuthenticatedUserAccountDTORequest;
 import com.simplebank.bank.usecases.ports.AuthenticatedUserAccountDTOResponse;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public class AuthenticatedUserAccount
     implements UseCase<AuthenticatedUserAccountDTORequest, AuthenticatedUserAccountDTOResponse>
 {
